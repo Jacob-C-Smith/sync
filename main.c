@@ -11,8 +11,8 @@ int main()
 {
 
     // Initialized data
-    mutex     m = 0;
-    semaphore s = 0;
+    mutex     m = { 0 };
+    semaphore s = { 0 };
 
     // Mutex
     {
