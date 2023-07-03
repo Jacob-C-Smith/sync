@@ -1,0 +1,312 @@
+/** !
+ * Cross platform synchronization primitives 
+ * 
+ * @file sync.c 
+ * 
+ * @author Jacob Smith
+ */
+
+// Include 
+#include <sync/sync.h>
+
+int mutex_create ( mutex *p_mutex )
+{
+
+    // Argument check
+    if ( p_mutex == (void *) 0 ) goto no_mutex;
+
+    // Platform dependent implementation
+    #ifdef _WIN64
+
+        // Create a mutex
+        *p_mutex = CreateMutex(0, FALSE, 0);
+
+        // Return
+        return ( *p_mutex != 0 );
+    #else
+
+        // Return
+        return ( pthread_mutex_init(p_mutex, NULL) == 0 );
+    #endif
+
+    // Error
+    return 0;
+
+    // Error handling
+    {
+        
+        // Argument errors
+        {
+            no_mutex:
+                #ifndef NDEBUG
+                    printf("[sync] Null pointer provided for \"p_mutex\" in call to function \"%s\"\n", __FUNCTION__);
+                #endif
+
+                // Error
+                return 0;
+        }
+    }
+}
+
+int semaphore_create ( semaphore *p_semaphore, int count )
+{
+
+    // Argument check
+    if ( p_semaphore == (void *) 0 ) goto no_semaphore;
+    
+    // Platform dependent implementation
+    #ifdef _WIN64
+
+        // Create a semaphore with the specified count
+        *p_semaphore = CreateSemaphore(NULL, count, count, NULL);
+
+        // Return
+        return ( p_semaphore != 0 );
+    #else
+
+        // Return
+        return ( sem_init(p_semaphore, 0, count) == 0)
+    #endif
+
+    // Error
+    return 0;
+
+    // Error handling
+    {
+        
+        // Argument errors
+        {
+            no_semaphore:
+                #ifndef NDEBUG
+                    printf("[sync] Null pointer provided for \"p_semaphore\" in call to function \"%s\"\n", __FUNCTION__);
+                #endif
+
+                // Error
+                return 0;
+        }
+    }
+}
+
+int mutex_lock ( mutex _mutex )
+{
+
+    // Platform dependent argument check
+    #ifdef _WIN64
+        if ( _mutex == INVALID_HANDLE_VALUE ) goto no_mutex;
+    #endif
+    
+    // Platform dependent implementation
+    #ifdef _WIN64
+
+        // Return
+        return ( WaitForSingleObject(_mutex, INFINITE) == WAIT_FAILED ? 0 : 1 );
+    #else
+
+        // Return
+        return ( pthread_mutex_lock(&p_mutex) == 0 );
+    #endif
+
+    // Error
+    return 0;
+
+    // Error handling
+    {
+
+        // Argument error
+        {
+            no_mutex:
+                #ifndef NDEBUG
+                    printf("[sync] Invalid parameter provided for \"_mutex\" in call to function \"%s\"\n", __FUNCTION__);
+                #endif
+
+                // Error
+                return 0;
+        }
+    }
+}
+
+int semaphore_wait ( semaphore _semaphore )
+{
+
+    // Platform dependent argument check
+    #ifdef _WIN64
+        if ( _semaphore == INVALID_HANDLE_VALUE ) goto no_semaphore;
+    #endif
+
+    // Platform dependent implementation
+    #ifdef _WIN64
+
+        // Return
+        return ( WaitForSingleObject(_semaphore, INFINITE) == WAIT_FAILED ? 0 : 1 );
+    #else
+
+        // Return
+        return ( sem_wait(&_semaphore) == 0 );
+    #endif
+
+    // Error
+    return 0;
+
+    // Error handling
+    {
+
+        // Argument error
+        {
+            no_semaphore:
+                #ifndef NDEBUG
+                    printf("[sync] Invalid parameter provided for \"_semaphore\" in call to function \"%s\"\n", __FUNCTION__);
+                #endif
+
+                // Error
+                return 0;
+        }
+    }
+}
+
+int mutex_unlock ( mutex _mutex )
+{
+
+    // Platform dependent argument check
+    #ifdef _WIN64
+        if ( _mutex == INVALID_HANDLE_VALUE ) goto no_mutex;
+    #endif
+
+    // Platform dependent implementation
+    #ifdef _WIN64
+        
+        // Return
+        return ReleaseMutex(_mutex);
+    #else
+
+        // Return
+        return ( pthread_mutex_unlock(&p_mutex) == 0 );
+    #endif
+
+    // Error
+    return 0;
+
+    // Error handling
+    {
+
+        // Argument error
+        {
+            no_mutex:
+                #ifndef NDEBUG
+                    printf("[sync] Invalid parameter provided for \"_mutex\" in call to function \"%s\"\n", __FUNCTION__);
+                #endif
+
+                // Error
+                return 0;
+        }
+    }
+}
+
+int semaphore_signal ( semaphore _semaphore )
+{
+
+    // Platform dependent argument check
+    #ifdef _WIN64
+        if ( _semaphore == INVALID_HANDLE_VALUE ) goto no_semaphore;
+    #endif
+
+    // Platform dependent implementation
+    #ifdef _WIN64
+
+        // Return
+        return ( ReleaseSemaphore(_semaphore, 1, 0) );
+    #else
+
+        // Return
+        return ( sem_post(&_semaphore) == 0 );
+    #endif
+
+    // Error
+    return 0;
+
+    // Error handling
+    {
+
+        // Argument errors
+        {
+            no_semaphore:
+                #ifndef NDEBUG
+                    printf("[sync] Invalid parameter provided for \"_semaphore\" in call to function \"%s\"\n", __FUNCTION__);
+                #endif
+
+                // Error
+                return 0;
+        }
+    }
+}
+
+int mutex_destroy ( mutex *p_mutex )
+{
+
+    // Argument check
+    if ( p_mutex == (void *) 0 ) goto no_mutex;
+
+    // Platform dependent implementation
+    #ifdef _WIN64
+
+        // Return
+        return ( CloseHandle(*p_mutex) );
+    #else
+
+        // Return
+        return ( pthread_mutex_destroy(p_mutex) == 0 );
+    #endif
+
+    // Error
+    return 0;
+
+    // Error handling
+    {
+        
+        // Argument errors
+        {
+            no_mutex:
+                #ifndef NDEBUG
+                    printf("[sync] Null pointer provided for \"p_mutex\" in call to function \"%s\"\n", __FUNCTION__);
+                #endif
+
+                // Error
+                return 0;
+        }
+    }
+}
+
+int semaphore_destroy ( semaphore *p_semaphore )
+{
+
+    // Argument check
+    if ( p_semaphore == (void *) 0 ) goto no_semaphore;
+
+    // Platform dependent implementation
+    #ifdef _WIN64
+
+        // Return
+        return ( CloseHandle(*p_semaphore) );
+    #else
+
+        // Return
+        return ( sem_destroy(p_semaphore) == 0 );
+    #endif
+
+    // Error
+    return 0;
+
+    // Error handling
+    {
+        
+        // Argument errors
+        {
+            no_semaphore:
+                #ifndef NDEBUG
+                    printf("[sync] Null pointer provided for \"p_semaphore\" in call to function \"%s\"\n", __FUNCTION__);
+                #endif
+
+                // Error
+                return 0;
+        }
+    }
+}
