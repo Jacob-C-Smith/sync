@@ -15,6 +15,7 @@
     #include <process.h>
 #else
     #include <pthread.h>
+    #include <semaphore.h>
 #endif
 
 // Platform dependent macros

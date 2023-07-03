@@ -65,7 +65,7 @@ int semaphore_create ( semaphore *p_semaphore, int count )
     #else
 
         // Return
-        return ( sem_init(p_semaphore, 0, count) == 0)
+        return ( sem_init(p_semaphore, 0, count) == 0 );
     #endif
 
     // Error
@@ -103,7 +103,7 @@ int mutex_lock ( mutex _mutex )
     #else
 
         // Return
-        return ( pthread_mutex_lock(&p_mutex) == 0 );
+        return ( pthread_mutex_lock(&_mutex) == 0 );
     #endif
 
     // Error
@@ -179,7 +179,7 @@ int mutex_unlock ( mutex _mutex )
     #else
 
         // Return
-        return ( pthread_mutex_unlock(&p_mutex) == 0 );
+        return ( pthread_mutex_unlock(&_mutex) == 0 );
     #endif
 
     // Error
