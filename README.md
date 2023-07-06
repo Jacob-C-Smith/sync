@@ -74,3 +74,5 @@
  int mutex_destroy     ( mutex     *p_mutex );
  int semaphore_destroy ( semaphore *p_semaphore );
  ```
+
+Written by Jacob Smith, 2023
