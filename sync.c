@@ -9,6 +9,9 @@
 // Include 
 #include <sync/sync.h>
 
+static size_t SYNC_TIMER_DIVISOR = 0;
+const size_t sec_2_ns = 1000000000;
+
 int mutex_create ( mutex *p_mutex )
 {
 
@@ -309,4 +312,55 @@ int semaphore_destroy ( semaphore *p_semaphore )
                 return 0;
         }
     }
+}
+
+timestamp timer_high_precision ( void )
+{
+    
+    // Initialiized data
+    timestamp ret = 0;
+
+    // Platform dependent implementation
+    #ifdef _WIN64
+
+        // Query the performance counter
+        QueryPerformanceCounter(&ret);
+    #else
+
+        // Initialized data
+        struct timespec ts;
+
+        // Populate the time struct using the monotonic timer
+        clock_gettime(CLOCK_MONOTONIC, &ts);
+
+        // Compute the monotonic time in nanoseconds
+        ret = ts.tv_sec + ( ts.tv_nsec * sec_2_ns );
+    #endif
+
+    // Error
+    return ret;
+}
+
+size_t timer_seconds_divisor ( void )
+{
+
+    // Success
+    return SYNC_TIMER_DIVISOR;
+}
+
+void timer_init ( void )
+{
+    
+    // Platform dependent implementation
+    #ifdef _WIN64
+        QueryPerformanceFrequency(&SYNC_TIMER_DIVISOR);
+    #else
+
+        // Set the sync timer divisor
+        *(size_t *)(&SYNC_TIMER_DIVISOR) = sec_2_ns;
+        
+    #endif
+
+    // Return
+    return;
 }

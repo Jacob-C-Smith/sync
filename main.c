@@ -11,8 +11,41 @@ int main()
 {
 
     // Initialized data
-    mutex     m = { 0 };
-    semaphore s = { 0 };
+    mutex     m  = { 0 };
+    semaphore s  = { 0 };
+    timestamp t1 = 0, 
+              t2 = 0,
+              td = 0;
+
+    // Timer
+    {
+        
+        // Initialized data
+        size_t N = 0;
+        double s = 0;
+
+        // Initialize the timer
+        timer_init();
+
+        // Record a timestamp
+        t1 = timer_high_precision();
+
+        // Iterate 1,000,000,000 times, accumulating a bogus variable
+        for (size_t i = 0; i < 1,000,000,000; i++)
+            N += i;
+        
+        // Record another timestamp
+        t2 = timer_high_precision();
+
+        // Compute the difference
+        td = t2 - t1;
+
+        // Convert the difference to seconds
+        s = (double) td / (double) timer_seconds_divisor();
+
+        // Print the time difference in seconds
+        printf("%f\n", s);
+    }
 
     // Mutex
     {

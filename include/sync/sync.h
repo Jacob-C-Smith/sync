@@ -9,6 +9,9 @@
 // Include guard
 #pragma once
 
+// Includes
+#include <stdio.h>
+
 // Platform dependent includes
 #ifdef _WIN64
     #include <windows.h>
@@ -16,6 +19,7 @@
 #else
     #include <pthread.h>
     #include <semaphore.h>
+    #include <time.h>
 #endif
 
 // Platform dependent macros
@@ -27,14 +31,49 @@
 
 // Platform dependent typedefs
 #ifdef _WIN64
-    typedef HANDLE             mutex;
-    typedef HANDLE             semaphore;
-    typedef CONDITION_VARIABLE condition_variable;
+    typedef HANDLE mutex;
+    typedef HANDLE semaphore;
 #else
     typedef pthread_mutex_t mutex;
     typedef sem_t           semaphore;
-    typedef pthread_cond_t  condition_variable;
 #endif
+
+// Typedefs
+typedef size_t timestamp;
+
+/** !
+ * Initialize the high precision timer
+ * 
+ * @param void
+ * 
+ * @sa timer_high_precision
+ * 
+ * @return void
+ */
+DLLEXPORT void timer_init ( void );
+
+/** !
+ * Get a high precision time stamp. Compute differences,
+ * and use the SYNC_TIMER_DIVISOR constant to convert 
+ * time to seconds
+ * 
+ * @return a high precision time stamp.
+ */
+DLLEXPORT timestamp timer_high_precision ( void );
+
+/** !
+ * Get a constant for converting time to seconds. Dividing
+ * the difference of two timestamp by the return yields the
+ * time between timestamps in seconds.
+ * 
+ * @param void
+ * 
+ * @sa timer_high_precision
+ * @sa timer_init
+ * 
+ * @return a constant for converting time to seconds
+ */
+DLLEXPORT size_t timer_seconds_divisor ( void );
 
 // Constructors
 /** !
@@ -60,17 +99,6 @@ DLLEXPORT int mutex_create ( mutex *p_mutex );
  */
 DLLEXPORT int semaphore_create ( semaphore *p_semaphore, int count );
 
-/** !
- * Create a condition variable
- * 
- * @param p_condition_variable : ret
- * 
- * @sa condition_variable_destroy
- * 
- * @return 1 on success, 0 on error
- */
-DLLEXPORT int condition_variable_create ( condition_variable *p_condition_variable );
-
 // Lock operations
 /** !
  * Lock a mutex
@@ -93,19 +121,6 @@ DLLEXPORT int mutex_lock ( mutex _mutex );
  * @return 1 on success, 0 on error
  */
 DLLEXPORT int semaphore_wait ( semaphore _semaphore );
-
-/** !
- * Wait on a condition with a mutex
- * 
- * @param _condition_variable : the condition variable
- * @param _mutex              : the mutex
- * 
- * @sa condition_variable_signal
- * @sa condition_variable_broadcast
- * 
- * @return 1 on success, 0 on error
- */
-DLLEXPORT int condition_variable_wait ( condition_variable _condition_variable, mutex _mutex );
 
 // Unlock operations
 /** !
@@ -130,30 +145,6 @@ DLLEXPORT int mutex_unlock ( mutex _mutex );
  */
 DLLEXPORT int semaphore_signal ( semaphore _semaphore );
 
-/** !
- * Signal a condition variable
- * 
- * @param _condition_variable : the condition variable
- * 
- * @sa condition_variable_wait
- * @sa condition_variable_broadcast
- * 
- * @return 1 on success, 0 on error
- */
-DLLEXPORT int condition_variable_signal ( condition_variable _condition_variable );
-
-/** !
- * Signal all condition variables
- * 
- * @param _condition_variable : the condition variable
- * 
- * @sa condition_variable_wait
- * @sa condition_variable_signal
- * 
- * @return 1 on success, 0 on error
- */
-DLLEXPORT int condition_variable_broadcast ( condition_variable _condition_variable );
-
 // Destructors
 /** !
  * Deallocate a mutex
@@ -176,14 +167,3 @@ DLLEXPORT int mutex_destroy ( mutex *p_mutex );
  * @return 1 on success, 0 on error
  */
 DLLEXPORT int semaphore_destroy ( semaphore *p_semaphore );
-
-/** !
- * Deallocate a condition variable
- * 
- * @param p_condition_variable : pointer to condition variable
- * 
- * @sa condition_variable_create
- * 
- * @return 1 on success, 0 on error
- */
-DLLEXPORT int condition_variable_destroy ( condition_variable *p_condition_variable );
