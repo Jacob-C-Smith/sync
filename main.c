@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-// sync
+// sync submodule
 #include <sync/sync.h>
 
 // Entry point
@@ -31,7 +31,7 @@ int main()
         t1 = timer_high_precision();
 
         // Iterate 1,000,000,000 times, accumulating a bogus variable
-        for (size_t i = 0; i < 1,000,000,000; i++)
+        for (size_t i = 0; i < 1000000000; i++)
             N += i;
         
         // Record another timestamp
