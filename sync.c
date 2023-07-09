@@ -334,7 +334,7 @@ timestamp timer_high_precision ( void )
         clock_gettime(CLOCK_MONOTONIC, &ts);
 
         // Compute the monotonic time in nanoseconds
-        ret = ts.tv_sec + ( ts.tv_nsec * sec_2_ns );
+        ret = ( ts.tv_sec * sec_2_ns ) + ( ts.tv_nsec );
     #endif
 
     // Error

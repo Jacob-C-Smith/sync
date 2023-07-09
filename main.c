@@ -7,7 +7,7 @@
 #include <sync/sync.h>
 
 // Entry point
-int main()
+int main ( int argc, const char *argv[] )
 {
 
     // Initialized data
@@ -44,7 +44,7 @@ int main()
         s = (double) td / (double) timer_seconds_divisor();
 
         // Print the time difference in seconds
-        printf("%f\n", s);
+        (void)printf("%f\n", s);
     }
 
     // Mutex
