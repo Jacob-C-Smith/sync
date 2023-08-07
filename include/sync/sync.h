@@ -85,7 +85,7 @@ DLLEXPORT size_t timer_seconds_divisor ( void );
  * 
  * @return 1 on success, 0 on error
 */
-DLLEXPORT int mutex_create ( mutex *p_mutex );
+DLLEXPORT int mutex_create ( mutex *const p_mutex );
 
 /** !
  * Create a semaphore
@@ -97,7 +97,7 @@ DLLEXPORT int mutex_create ( mutex *p_mutex );
  * 
  * @return 1 on success, 0 on error
  */
-DLLEXPORT int semaphore_create ( semaphore *p_semaphore, int count );
+DLLEXPORT int semaphore_create ( semaphore *const p_semaphore, int count );
 
 // Lock operations
 /** !
@@ -109,7 +109,7 @@ DLLEXPORT int semaphore_create ( semaphore *p_semaphore, int count );
  * 
  * @return 1 on success, 0 on error
  */
-DLLEXPORT int mutex_lock ( mutex _mutex );
+DLLEXPORT int mutex_lock ( const mutex _mutex );
 
 /** !
  * Wait on a semaphore
@@ -120,7 +120,7 @@ DLLEXPORT int mutex_lock ( mutex _mutex );
  * 
  * @return 1 on success, 0 on error
  */
-DLLEXPORT int semaphore_wait ( semaphore _semaphore );
+DLLEXPORT int semaphore_wait ( const semaphore _semaphore );
 
 // Unlock operations
 /** !
@@ -132,7 +132,7 @@ DLLEXPORT int semaphore_wait ( semaphore _semaphore );
  * 
  * @return 1 on success, 0 on error
  */
-DLLEXPORT int mutex_unlock ( mutex _mutex );
+DLLEXPORT int mutex_unlock ( const mutex _mutex );
 
 /** !
  * Signal a semaphore
@@ -143,7 +143,7 @@ DLLEXPORT int mutex_unlock ( mutex _mutex );
  * 
  * @return 1 on success, 0 on error
  */
-DLLEXPORT int semaphore_signal ( semaphore _semaphore );
+DLLEXPORT int semaphore_signal ( const semaphore _semaphore );
 
 // Destructors
 /** !
@@ -155,7 +155,7 @@ DLLEXPORT int semaphore_signal ( semaphore _semaphore );
  * 
  * @return 1 on success, 0 on error
  */
-DLLEXPORT int mutex_destroy ( mutex *p_mutex );
+DLLEXPORT int mutex_destroy ( const mutex *const p_mutex );
 
 /** !
  * Deallocate a semaphore
@@ -166,4 +166,4 @@ DLLEXPORT int mutex_destroy ( mutex *p_mutex );
  * 
  * @return 1 on success, 0 on error
  */
-DLLEXPORT int semaphore_destroy ( semaphore *p_semaphore );
+DLLEXPORT int semaphore_destroy ( const semaphore *const p_semaphore );

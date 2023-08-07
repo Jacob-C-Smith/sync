@@ -12,7 +12,7 @@
 static size_t SYNC_TIMER_DIVISOR = 0;
 const size_t sec_2_ns = 1000000000;
 
-int mutex_create ( mutex *p_mutex )
+int mutex_create ( mutex *const p_mutex )
 {
 
     // Argument check
@@ -51,7 +51,7 @@ int mutex_create ( mutex *p_mutex )
     }
 }
 
-int semaphore_create ( semaphore *p_semaphore, int count )
+int semaphore_create ( semaphore *const p_semaphore, int count )
 {
 
     // Argument check
@@ -90,7 +90,7 @@ int semaphore_create ( semaphore *p_semaphore, int count )
     }
 }
 
-int mutex_lock ( mutex _mutex )
+int mutex_lock ( const mutex _mutex )
 {
 
     // Platform dependent argument check
@@ -128,7 +128,7 @@ int mutex_lock ( mutex _mutex )
     }
 }
 
-int semaphore_wait ( semaphore _semaphore )
+int semaphore_wait ( const semaphore _semaphore )
 {
 
     // Platform dependent argument check
@@ -166,7 +166,7 @@ int semaphore_wait ( semaphore _semaphore )
     }
 }
 
-int mutex_unlock ( mutex _mutex )
+int mutex_unlock ( const mutex _mutex )
 {
 
     // Platform dependent argument check
@@ -204,7 +204,7 @@ int mutex_unlock ( mutex _mutex )
     }
 }
 
-int semaphore_signal ( semaphore _semaphore )
+int semaphore_signal ( const semaphore _semaphore )
 {
 
     // Platform dependent argument check
@@ -242,7 +242,7 @@ int semaphore_signal ( semaphore _semaphore )
     }
 }
 
-int mutex_destroy ( mutex *p_mutex )
+int mutex_destroy ( const mutex *const p_mutex )
 {
 
     // Argument check
@@ -278,7 +278,7 @@ int mutex_destroy ( mutex *p_mutex )
     }
 }
 
-int semaphore_destroy ( semaphore *p_semaphore )
+int semaphore_destroy ( const semaphore *const p_semaphore )
 {
 
     // Argument check
@@ -324,7 +324,7 @@ timestamp timer_high_precision ( void )
     #ifdef _WIN64
 
         // Query the performance counter
-        QueryPerformanceCounter(&ret);
+        QueryPerformanceCounter((LARGE_INTEGER *)&ret);
     #else
 
         // Initialized data
@@ -353,7 +353,7 @@ void timer_init ( void )
     
     // Platform dependent implementation
     #ifdef _WIN64
-        QueryPerformanceFrequency(&SYNC_TIMER_DIVISOR);
+        QueryPerformanceFrequency((LARGE_INTEGER *)&SYNC_TIMER_DIVISOR);
     #else
 
         // Set the sync timer divisor
