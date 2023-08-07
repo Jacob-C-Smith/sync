@@ -90,7 +90,7 @@ int semaphore_create ( semaphore *const p_semaphore, int count )
     }
 }
 
-int mutex_lock ( const mutex _mutex )
+int mutex_lock ( mutex _mutex )
 {
 
     // Platform dependent argument check
@@ -128,7 +128,7 @@ int mutex_lock ( const mutex _mutex )
     }
 }
 
-int semaphore_wait ( const semaphore _semaphore )
+int semaphore_wait ( semaphore _semaphore )
 {
 
     // Platform dependent argument check
@@ -166,7 +166,7 @@ int semaphore_wait ( const semaphore _semaphore )
     }
 }
 
-int mutex_unlock ( const mutex _mutex )
+int mutex_unlock ( mutex _mutex )
 {
 
     // Platform dependent argument check
@@ -204,7 +204,7 @@ int mutex_unlock ( const mutex _mutex )
     }
 }
 
-int semaphore_signal ( const semaphore _semaphore )
+int semaphore_signal ( semaphore _semaphore )
 {
 
     // Platform dependent argument check
@@ -242,7 +242,7 @@ int semaphore_signal ( const semaphore _semaphore )
     }
 }
 
-int mutex_destroy ( const mutex *const p_mutex )
+int mutex_destroy ( mutex *const p_mutex )
 {
 
     // Argument check
@@ -278,7 +278,7 @@ int mutex_destroy ( const mutex *const p_mutex )
     }
 }
 
-int semaphore_destroy ( const semaphore *const p_semaphore )
+int semaphore_destroy ( semaphore *const p_semaphore )
 {
 
     // Argument check
