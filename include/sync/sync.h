@@ -112,6 +112,17 @@ DLLEXPORT int semaphore_create ( semaphore *const p_semaphore, int count );
 DLLEXPORT int mutex_lock ( mutex _mutex );
 
 /** !
+ * Try to lock a mutex
+ * 
+ * @param _mutex : the mutex
+ * 
+ * @sa mutex_unlock
+ * 
+ * @return 1 if mutex was locked by mutex_try_lock, 0 if mutex is already locked
+ */
+DLLEXPORT int mutex_try_lock ( mutex _mutex );
+
+/** !
  * Wait on a semaphore
  * 
  * @param _semaphore : the semaphore

@@ -128,6 +128,44 @@ int mutex_lock ( mutex _mutex )
     }
 }
 
+int mutex_try_lock ( mutex _mutex )
+{
+
+    // Platform dependent argument check
+    #ifdef _WIN64
+        if ( _mutex == INVALID_HANDLE_VALUE ) goto no_mutex;
+    #endif
+    
+    // Platform dependent implementation
+    #ifdef _WIN64
+
+        // Return
+        return ( WaitForSingleObject(_mutex, 0) == WAIT_OBJECT_0  ? 1 : 0 );
+    #else
+
+        // Return
+        return ( pthread_mutex_trylock(&_mutex) == 0 );
+    #endif
+
+    // Error
+    return 0;
+
+    // Error handling
+    {
+
+        // Argument error
+        {
+            no_mutex:
+                #ifndef NDEBUG
+                    printf("[sync] Invalid parameter provided for \"_mutex\" in call to function \"%s\"\n", __FUNCTION__);
+                #endif
+
+                // Error
+                return 0;
+        }
+    }
+}
+
 int semaphore_wait ( semaphore _semaphore )
 {
 

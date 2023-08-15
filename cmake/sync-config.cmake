@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.0)
 
 include(FeatureSummary)
 set_package_properties(SYNC PROPERTIES
-    URL "https://www.g10.app/ADT/sync"
+    URL "https://www.g10.app/status"
     DESCRIPTION "sync"
 )
 
