@@ -10,6 +10,10 @@
 int main ( int argc, const char *argv[] )
 {
 
+    // Supress compiler warnings
+    (void) argc;
+    (void) argv;
+
     // Initialized data
     mutex     m  = { 0 };
     semaphore s  = { 0 };
@@ -21,8 +25,7 @@ int main ( int argc, const char *argv[] )
     {
         
         // Initialized data
-        size_t N = 0;
-        double s = 0;
+        double sec = 0;
 
         // Initialize the timer
         timer_init();
@@ -31,8 +34,7 @@ int main ( int argc, const char *argv[] )
         t1 = timer_high_precision();
 
         // Iterate 1,000,000,000 times, accumulating a bogus variable
-        for (size_t i = 0; i < 1000000000; i++)
-            N += i;
+        for (size_t i = 0; i < 1000000000; i++);
         
         // Record another timestamp
         t2 = timer_high_precision();
@@ -41,10 +43,10 @@ int main ( int argc, const char *argv[] )
         td = t2 - t1;
 
         // Convert the difference to seconds
-        s = (double) td / (double) timer_seconds_divisor();
+        sec = (double) td / (double) ( timer_seconds_divisor() );
 
         // Print the time difference in seconds
-        (void)printf("%f\n", s);
+        (void)printf("%lf seconds\n", sec);
     }
 
     // Mutex
