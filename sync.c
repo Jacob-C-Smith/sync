@@ -48,6 +48,7 @@ int mutex_create ( mutex *const p_mutex )
     }
 }
 
+#ifdef BUILD_SYNC_WITH_SEMAPHORE
 int semaphore_create ( semaphore *const p_semaphore, unsigned int count )
 {
 
@@ -83,6 +84,7 @@ int semaphore_create ( semaphore *const p_semaphore, unsigned int count )
         }
     }
 }
+#endif
 
 int mutex_lock ( mutex _mutex )
 {
@@ -119,6 +121,7 @@ int mutex_lock ( mutex _mutex )
     }
 }
 
+#ifdef BUILD_SYNC_WITH_SEMAPHORE
 int semaphore_wait ( semaphore _semaphore )
 {
 
@@ -153,6 +156,7 @@ int semaphore_wait ( semaphore _semaphore )
         }
     }
 }
+#endif
 
 int mutex_unlock ( mutex _mutex )
 {
@@ -188,6 +192,7 @@ int mutex_unlock ( mutex _mutex )
     }
 }
 
+#ifdef BUILD_SYNC_WITH_SEMAPHORE
 int semaphore_signal ( semaphore _semaphore )
 {
 
@@ -226,6 +231,7 @@ int semaphore_signal ( semaphore _semaphore )
         }
     }
 }
+#endif
 
 int mutex_destroy ( mutex *const p_mutex )
 {
@@ -260,6 +266,7 @@ int mutex_destroy ( mutex *const p_mutex )
     }
 }
 
+#ifdef BUILD_SYNC_WITH_SEMAPHORE
 int semaphore_destroy ( semaphore *const p_semaphore )
 {
 
@@ -292,6 +299,7 @@ int semaphore_destroy ( semaphore *const p_semaphore )
         }
     }
 }
+#endif
 
 int thread_create ( thread **pp_thread, void *vpfn_function, const char *name, void *vp_data );
 

@@ -16,7 +16,7 @@ int main ( int argc, const char *argv[] )
 
     // Initialized data
     mutex     m  = { 0 };
-    semaphore s  = { 0 };
+    
     timestamp t1 = 0, 
               t2 = 0,
               td = 0;
@@ -71,8 +71,12 @@ int main ( int argc, const char *argv[] )
     }
 
     // Semaphore
+    #ifdef BUILD_SYNC_WITH_SEMAPHORE
     {
-
+        
+        // Initialized data
+        semaphore s  = { 0 };
+        
         // Create
         if ( semaphore_create(&s, 10) == 0 )
 
@@ -88,6 +92,7 @@ int main ( int argc, const char *argv[] )
         // Destroy
         (void) semaphore_destroy(&s);
     }
+    #endif
 
     // Success
     return EXIT_SUCCESS;

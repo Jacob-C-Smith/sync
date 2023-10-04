@@ -85,6 +85,7 @@ DLLEXPORT signed timer_seconds_divisor ( void );
 */
 DLLEXPORT int mutex_create ( mutex *const p_mutex );
 
+#ifdef BUILD_SYNC_WITH_SEMAPHORE
 /** !
  * Create a semaphore
  * 
@@ -96,6 +97,7 @@ DLLEXPORT int mutex_create ( mutex *const p_mutex );
  * @return 1 on success, 0 on error
  */
 DLLEXPORT int semaphore_create ( semaphore *const p_semaphore, unsigned int count );
+#endif
 
 // Lock operations
 /** !
@@ -109,6 +111,7 @@ DLLEXPORT int semaphore_create ( semaphore *const p_semaphore, unsigned int coun
  */
 DLLEXPORT int mutex_lock ( mutex _mutex );
 
+#ifdef BUILD_SYNC_WITH_SEMAPHORE
 /** !
  * Wait on a semaphore
  * 
@@ -119,6 +122,7 @@ DLLEXPORT int mutex_lock ( mutex _mutex );
  * @return 1 on success, 0 on error
  */
 DLLEXPORT int semaphore_wait ( semaphore _semaphore );
+#endif
 
 // Unlock operations
 /** !
@@ -132,6 +136,7 @@ DLLEXPORT int semaphore_wait ( semaphore _semaphore );
  */
 DLLEXPORT int mutex_unlock ( mutex _mutex );
 
+#ifdef BUILD_SYNC_WITH_SEMAPHORE
 /** !
  * Signal a semaphore
  * 
@@ -142,6 +147,7 @@ DLLEXPORT int mutex_unlock ( mutex _mutex );
  * @return 1 on success, 0 on error
  */
 DLLEXPORT int semaphore_signal ( semaphore _semaphore );
+#endif
 
 // Destructors
 /** !
@@ -155,6 +161,7 @@ DLLEXPORT int semaphore_signal ( semaphore _semaphore );
  */
 DLLEXPORT int mutex_destroy ( mutex *const p_mutex );
 
+#ifdef BUILD_SYNC_WITH_SEMAPHORE
 /** !
  * Deallocate a semaphore
  * 
@@ -165,14 +172,4 @@ DLLEXPORT int mutex_destroy ( mutex *const p_mutex );
  * @return 1 on success, 0 on error
  */
 DLLEXPORT int semaphore_destroy ( semaphore *const p_semaphore );
-
-/** !
- * Deallocate a thread
- * 
- * @param p_thread pointer to thread
- * 
- * @sa thread_create
- * 
- * @return 1 on success, 0 on error
- */
-DLLEXPORT int thread_destroy ( thread *const p_thread );
+#endif
