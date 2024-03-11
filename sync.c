@@ -9,6 +9,8 @@
 // Include 
 #include <sync/sync.h>
 
+#define BUILD_SYNC_WITH_SEMAPHORE
+
 static signed SYNC_TIMER_DIVISOR = 0;
 static const signed sec_2_ns = 1000000000;
 

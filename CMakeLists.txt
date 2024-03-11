@@ -1,5 +1,5 @@
-﻿# Need CMake 3.0
-cmake_minimum_required (VERSION 3.0)
+﻿# Need CMake 3.28.0
+cmake_minimum_required (VERSION 3.28.0)
 
 # The name of the repository
 project ("sync")
@@ -20,7 +20,7 @@ else()
     # For GCC
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu99 -Wall -Wextra -Wpedantic -Wno-declaration-after-statement -O3")
     add_compile_definitions(__USE_POSIX199309)
-    add_compile_options(-Wall -Wextra -Wpedantic -Wpointer-arith -Wstrict-prototypes -Wformat-security -Wduplicated-cond -Wfloat-equal -Wshadow -Wconversion -Wjump-misses-init -Wlogical-not-parentheses -Wnull-dereference)
+    add_compile_options(-Wall -Wextra -Wpedantic -Wpointer-arith -Wstrict-prototypes -Wformat-security -Wfloat-equal -Wshadow -Wconversion -pthread -Wlogical-not-parentheses -Wnull-dereference)
 endif()
 
 # Comment out for Debug mode
@@ -36,15 +36,23 @@ if ( NOT "${HAS_SYNC}")
 
     # Log
     message("[sync] Adding sync project")
+    
+    set(SYNC_INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/include)
 
     # Let any parent project know that it has the sync project
-    set(HAS_SYNC CACHE true PARENT_SCOPE)
+    if(NOT PROJECT_IS_TOP_LEVEL)
+        set(HAS_SYNC true PARENT_SCOPE)
+        set(SYNC_INCLUDE_DIR ${SYNC_INCLUDE_DIR} PARENT_SCOPE)
+    endif()
 endif()
 
 # Add source to the executable
-add_executable(sync_example "sync.c" "main.c")
-target_include_directories(sync_example PUBLIC include include/sync/)
+add_executable(sync_example "main.c")
+add_dependencies(sync_example sync)
+target_include_directories(sync_example PUBLIC ${SYNC_INCLUDE_DIR})
+target_link_libraries(sync_example sync pthread rt)
 
 # Add source to the library
 add_library(sync SHARED "sync.c")
-target_include_directories(sync PUBLIC include include/sync/)
+target_include_directories(sync PUBLIC ${SYNC_INCLUDE_DIR})
+target_link_libraries(sync pthread rt)

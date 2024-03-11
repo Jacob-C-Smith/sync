@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define BUILD_SYNC_WITH_SEMAPHORE
+
 // sync submodule
 #include <sync/sync.h>
 
