@@ -6,13 +6,12 @@
  * @author Jacob Smith
  */
 
-// Include 
+// Header file 
 #include <sync/sync.h>
 
-#define BUILD_SYNC_WITH_SEMAPHORE
-
+// Static data
 static signed SYNC_TIMER_DIVISOR = 0;
-static const signed sec_2_ns = 1000000000;
+static const signed SEC_2_NS = 1000000000;
 
 int mutex_create ( mutex *const p_mutex )
 {
@@ -325,7 +324,7 @@ timestamp timer_high_precision ( void )
         clock_gettime(CLOCK_MONOTONIC, &ts);
 
         // Compute the monotonic time in nanoseconds
-        ret = ( (signed)ts.tv_sec * sec_2_ns ) + ( (signed) ts.tv_nsec );
+        ret = ( (signed)ts.tv_sec * SEC_2_NS ) + ( (signed) ts.tv_nsec );
     #endif
 
     // Error
@@ -348,7 +347,7 @@ void timer_init ( void )
     #else
 
         // Set the sync timer divisor
-        *(signed *)(&SYNC_TIMER_DIVISOR) = sec_2_ns;
+        *(signed *)(&SYNC_TIMER_DIVISOR) = SEC_2_NS;
         
     #endif
 
