@@ -9,7 +9,7 @@
 // Include guard
 #pragma once
 
-// Includes
+// Standard library
 #include <stdio.h>
 #include <time.h>
 
@@ -47,8 +47,11 @@ typedef signed timestamp;
 /** !
  * Initialize the high precision timer
  * 
+ * @param void
+ * 
  * @sa timer_high_precision
  * 
+ * @return void
  */
 DLLEXPORT void timer_init ( void );
 
@@ -56,6 +59,11 @@ DLLEXPORT void timer_init ( void );
  * Get a high precision time stamp. Compute differences,
  * and use the SYNC_TIMER_DIVISOR constant to convert 
  * time to seconds
+ * 
+ * @param void
+ * 
+ * @sa timer_seconds_divisor
+ * @sa timer_init
  * 
  * @return a high precision time stamp.
  */
@@ -66,10 +74,12 @@ DLLEXPORT timestamp timer_high_precision ( void );
  * the difference of two timestamp by the return yields the
  * time between timestamps in seconds.
  * 
+ * @param void
+ * 
  * @sa timer_high_precision
  * @sa timer_init
  * 
- * @return a constant for converting time to seconds
+ * @return a constant integer for converting time to seconds
  */
 DLLEXPORT signed timer_seconds_divisor ( void );
 
