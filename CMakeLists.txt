@@ -29,6 +29,9 @@ set(IS_DEBUG_BUILD CMAKE_BUILD_TYPE STREQUAL "Debug")
 # Build sync with semaphore
 add_compile_definitions(BUILD_SYNC_WITH_SEMAPHORE)
 
+# Build sync with monitor
+add_compile_definitions(BUILD_SYNC_WITH_MONITOR)
+
 # Set debug mode
 if (${IS_DEBUG_BUILD})
     add_compile_definitions(NDEBUG)

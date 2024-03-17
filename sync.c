@@ -87,6 +87,40 @@ int semaphore_create ( semaphore *const p_semaphore, unsigned int count )
 }
 #endif
 
+#ifdef BUILD_SYNC_WITH_MONITOR
+int monitor_create ( monitor *const p_monitor )
+{
+    // Argument check
+    if ( p_monitor == (void *) 0 ) goto no_monitor;
+    
+    // Platform dependent implementation
+    #ifdef _WIN64
+        // TODO
+        //
+
+    #else
+
+        // Return
+        return ( pthread_cond_init(&p_monitor->_cond, NULL) == 0 ) && ( pthread_mutex_init(&p_monitor->_mutex, NULL) == 0 );
+    #endif
+
+    // Error handling
+    {
+        
+        // Argument errors
+        {
+            no_monitor:
+                #ifndef NDEBUG
+                    printf("[sync] Null pointer provided for \"p_monitor\" in call to function \"%s\"\n", __FUNCTION__);
+                #endif
+
+                // Error
+                return 0;
+        }
+    }
+}
+#endif
+
 int mutex_lock ( mutex _mutex )
 {
 
@@ -159,6 +193,22 @@ int semaphore_wait ( semaphore _semaphore )
 }
 #endif
 
+#ifdef BUILD_SYNC_WITH_MONITOR
+int monitor_wait ( monitor _monitor )
+{
+
+    // Platform dependent implementation
+    #ifdef _WIN64
+        
+        // TODO
+    #else
+
+        // Return
+        return ( pthread_cond_wait(&_monitor._cond, &_monitor._mutex) == 0 );
+    #endif
+}
+#endif
+
 int mutex_unlock ( mutex _mutex )
 {
 
@@ -197,8 +247,6 @@ int mutex_unlock ( mutex _mutex )
 int semaphore_signal ( semaphore _semaphore )
 {
 
-
-
     // Platform dependent implementation
     #ifdef _WIN64
 
@@ -231,6 +279,36 @@ int semaphore_signal ( semaphore _semaphore )
             #endif
         }
     }
+}
+#endif
+
+#ifdef BUILD_SYNC_WITH_MONITOR
+int monitor_notify ( monitor _monitor )
+{
+
+    // Platform dependent implementation
+    #ifdef _WIN64
+        
+        // TODO
+    #else
+
+        // Return
+        return ( pthread_cond_signal(&_monitor._cond) == 0 );
+    #endif
+}
+
+int monitor_notify_all ( monitor _monitor )
+{
+
+    // Platform dependent implementation
+    #ifdef _WIN64
+        
+        // TODO
+    #else
+
+        // Return
+        return ( pthread_cond_broadcast(&_monitor._cond) == 0 );
+    #endif
 }
 #endif
 
@@ -302,7 +380,40 @@ int semaphore_destroy ( semaphore *const p_semaphore )
 }
 #endif
 
-int thread_create ( thread **pp_thread, void *vpfn_function, const char *name, void *vp_data );
+#ifdef BUILD_SYNC_WITH_MONITOR
+int monitor_destroy ( monitor *const p_monitor )
+{
+    
+    // Argument check
+    if ( p_monitor == (void *) 0 ) goto no_monitor;
+
+    // Platform dependent implementation
+    #ifdef _WIN64
+        // TODO
+        //
+
+    #else
+
+        // Return
+        return ( pthread_cond_destroy(&p_monitor->_cond) == 0 ) && ( pthread_mutex_destroy(&p_monitor->_mutex) == 0 );
+    #endif
+
+    // Error handling
+    {
+        
+        // Argument errors
+        {
+            no_monitor:
+                #ifndef NDEBUG
+                    printf("[sync] Null pointer provided for \"p_monitor\" in call to function \"%s\"\n", __FUNCTION__);
+                #endif
+
+                // Error
+                return 0;
+        }
+    }
+}
+#endif
 
 timestamp timer_high_precision ( void )
 {

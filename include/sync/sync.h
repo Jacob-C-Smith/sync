@@ -38,7 +38,11 @@
 #else
     typedef pthread_mutex_t mutex;
     typedef sem_t           semaphore;
-    typedef pthread_t       thread;
+    typedef struct
+    {
+        pthread_mutex_t _mutex;
+        pthread_cond_t  _cond;
+    } monitor;
 #endif
 
 // Typedefs
@@ -109,6 +113,19 @@ DLLEXPORT int mutex_create ( mutex *const p_mutex );
 DLLEXPORT int semaphore_create ( semaphore *const p_semaphore, unsigned int count );
 #endif
 
+#ifdef BUILD_SYNC_WITH_MONITOR
+/** !
+ * Create a semaphore
+ * 
+ * @param p_monitor ret
+ * 
+ * @sa monitor_destroy
+ * 
+ * @return 1 on success, 0 on error
+ */
+DLLEXPORT int monitor_create ( monitor *const p_monitor );
+#endif
+
 // Lock operations
 /** !
  * Lock a mutex
@@ -132,6 +149,10 @@ DLLEXPORT int mutex_lock ( mutex _mutex );
  * @return 1 on success, 0 on error
  */
 DLLEXPORT int semaphore_wait ( semaphore _semaphore );
+#endif
+
+#ifdef BUILD_SYNC_WITH_MONITOR
+DLLEXPORT int monitor_wait ( monitor _monitor );
 #endif
 
 // Unlock operations
@@ -159,6 +180,11 @@ DLLEXPORT int mutex_unlock ( mutex _mutex );
 DLLEXPORT int semaphore_signal ( semaphore _semaphore );
 #endif
 
+#ifdef BUILD_SYNC_WITH_MONITOR
+DLLEXPORT int monitor_notify ( monitor _monitor );
+DLLEXPORT int monitor_notify_all ( monitor _monitor );
+#endif
+
 // Destructors
 /** !
  * Deallocate a mutex
@@ -182,4 +208,8 @@ DLLEXPORT int mutex_destroy ( mutex *const p_mutex );
  * @return 1 on success, 0 on error
  */
 DLLEXPORT int semaphore_destroy ( semaphore *const p_semaphore );
+#endif
+
+#ifdef BUILD_SYNC_WITH_MONITOR
+DLLEXPORT int monitor_destroy ( monitor *const p_monitor );
 #endif

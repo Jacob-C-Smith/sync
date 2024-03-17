@@ -80,10 +80,9 @@ int main ( int argc, const char *argv[] )
         if ( sync_semaphore_example(argc, argv) == 0 ) goto failed_to_run_semaphore_example;
     #endif
 
-    // TODO: Run the monitor example program
+    // Run the monitor example program
     #ifdef BUILD_SYNC_WITH_MONITOR
-        // TODO: Call sync_monitor_example
-        //
+        if ( sync_monitor_example(argc, argv) == 0 ) goto failed_to_run_monitor_example;
     #endif
     
     // Success
@@ -222,8 +221,17 @@ int sync_semaphore_example ( int argc, const char *argv[] )
 int sync_monitor_example ( int argc, const char *argv[] )
 {
 
-    // TODO
-    //
+    // Initialized data
+    monitor m = { 0 };
+    
+    // Create
+    if ( monitor_create(&m) == 0 ) return EXIT_FAILURE;
+
+    // ... (Pretend) critical section ...
+    printf("[sync] [monitor] TODO\n");
+
+    // Destroy
+    (void) monitor_destroy(&m);
 
     // Success
     return 1;
