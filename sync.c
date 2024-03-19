@@ -194,7 +194,7 @@ int semaphore_wait ( semaphore _semaphore )
 #endif
 
 #ifdef BUILD_SYNC_WITH_MONITOR
-int monitor_wait ( monitor _monitor )
+int monitor_wait ( monitor *p_monitor )
 {
 
     // Platform dependent implementation
@@ -203,8 +203,20 @@ int monitor_wait ( monitor _monitor )
         // TODO
     #else
 
+        // Initialized data
+        int ret = 0;
+
+        // Lock
+        mutex_lock(p_monitor->_mutex);
+
+        // Wait
+        if ( pthread_cond_wait(&p_monitor->_cond, &p_monitor->_mutex) == 0 );
+
+        // Unlock
+        mutex_unlock(p_monitor->_mutex);
+
         // Return
-        return ( pthread_cond_wait(&_monitor._cond, &_monitor._mutex) == 0 );
+        return ret;
     #endif
 }
 #endif
@@ -283,7 +295,7 @@ int semaphore_signal ( semaphore _semaphore )
 #endif
 
 #ifdef BUILD_SYNC_WITH_MONITOR
-int monitor_notify ( monitor _monitor )
+int monitor_notify ( monitor *p_monitor )
 {
 
     // Platform dependent implementation
@@ -292,12 +304,24 @@ int monitor_notify ( monitor _monitor )
         // TODO
     #else
 
+        // Initialized data
+        int ret = 0;
+
+        // Lock
+        mutex_lock(p_monitor->_mutex);
+
+        // Signal
+        if ( pthread_cond_signal(&p_monitor->_cond) == 0 );
+
+        // Unlock
+        mutex_unlock(p_monitor->_mutex);
+
         // Return
-        return ( pthread_cond_signal(&_monitor._cond) == 0 );
+        return ret;
     #endif
 }
 
-int monitor_notify_all ( monitor _monitor )
+int monitor_notify_all ( monitor *p_monitor )
 {
 
     // Platform dependent implementation
@@ -306,8 +330,20 @@ int monitor_notify_all ( monitor _monitor )
         // TODO
     #else
 
+        // Initialized data
+        int ret = 0;
+
+        // Lock
+        mutex_lock(p_monitor->_mutex);
+
+        // Broadcast
+        if ( pthread_cond_broadcast(&p_monitor->_cond) == 0 );
+
+        // Unlock
+        mutex_unlock(p_monitor->_mutex);
+
         // Return
-        return ( pthread_cond_broadcast(&_monitor._cond) == 0 );
+        return ret;
     #endif
 }
 #endif

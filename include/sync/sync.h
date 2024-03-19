@@ -152,7 +152,7 @@ DLLEXPORT int semaphore_wait ( semaphore _semaphore );
 #endif
 
 #ifdef BUILD_SYNC_WITH_MONITOR
-DLLEXPORT int monitor_wait ( monitor _monitor );
+DLLEXPORT int monitor_wait ( monitor *p_monitor );
 #endif
 
 // Unlock operations
@@ -181,8 +181,8 @@ DLLEXPORT int semaphore_signal ( semaphore _semaphore );
 #endif
 
 #ifdef BUILD_SYNC_WITH_MONITOR
-DLLEXPORT int monitor_notify ( monitor _monitor );
-DLLEXPORT int monitor_notify_all ( monitor _monitor );
+DLLEXPORT int monitor_notify ( monitor *p_monitor );
+DLLEXPORT int monitor_notify_all ( monitor *p_monitor );
 #endif
 
 // Destructors
