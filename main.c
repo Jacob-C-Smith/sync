@@ -110,7 +110,7 @@ int main ( int argc, const char *argv[] )
         "╰──────────────╯\n"\
         "The sync library provides cross platform synchronization primitives and high-precision timing\n"\
         "Sync provides %d abstractions. The timer, the mutex, the semaphore, and the monitor.\n\n"\
-        "The timer is used for collecting high percision timestsamps.\n"\
+        "A timer is used to collect high percision timestsamps.\n"\
         "A mutex is the most basic synchronization primitive. It provides mutual exclusion to code.\n"\
         "A semaphore is an abstraction for controlling access to a resource.\n"\
         "A monitor is an abstraction for blocking and signaling threads in a critical section.\n\n",
@@ -284,6 +284,16 @@ int sync_timer_example ( int argc, const char *argv[] )
               t2  = 0,
               td  = 0;
 
+    // Formatting
+    printf(
+        "╭───────────────╮\n"\
+        "│ timer example │\n"\
+        "╰───────────────╯\n"\
+        "In this example, the timer is initialized. The program samples a timestamp t0,\n"\
+        "computes the 1,000,000,000th fibonacci number, and samples another timestamp t1.\n"\
+        "The difference of the timestamps (t1 - t0) is printed to standard out.\n\n"
+    );
+
     // Initialize the timer
     timer_init();
 
@@ -313,6 +323,9 @@ int sync_timer_example ( int argc, const char *argv[] )
     // Print the time difference in seconds
     (void)printf("%zu\r[sync] [timer] It took %lf seconds to calculate fib(%d)\n", d, sec, NTH_FIBONACCI_NUMBER);
 
+    // Format
+    putchar('\n');
+
     // Success
     return 1;
 }
@@ -322,6 +335,15 @@ int sync_mutex_example ( int argc, const char *argv[] )
 
     // Initialized data
     mutex m = { 0 };
+
+    // Formatting
+    printf(
+        "╭───────────────╮\n"\
+        "│ mutex example │\n"\
+        "╰───────────────╯\n"\
+        "In this example, a mutex is created and locked. The program does a pretend\n"\
+        "critical section, then the mutex is unlocked. Finally, the mutex is destroyed\n\n"
+    );
 
     // Create
     if ( mutex_create(&m) == 0 ) return EXIT_FAILURE;
@@ -338,6 +360,9 @@ int sync_mutex_example ( int argc, const char *argv[] )
     // Destroy
     (void) mutex_destroy(&m);
 
+    // Format
+    putchar('\n');
+
     // Success
     return 1;
 }
@@ -348,6 +373,15 @@ int sync_semaphore_example ( int argc, const char *argv[] )
     // Initialized data
     semaphore s = { 0 };
     
+    // Formatting
+    printf(
+        "╭───────────────────╮\n"\
+        "│ semaphore example │\n"\
+        "╰───────────────────╯\n"\
+        "In this example, a semaphore is created and locked. The program does a pretend\n"\
+        "critical section, then the semaphore is unlocked. Finally, the semaphore is destroyed\n\n"
+    );
+
     // Create
     if ( semaphore_create(&s, 1) == 0 ) return EXIT_FAILURE;
     
@@ -363,6 +397,9 @@ int sync_semaphore_example ( int argc, const char *argv[] )
     // Destroy
     (void) semaphore_destroy(&s);
 
+    // Format
+    putchar('\n');
+
     // Success
     return 1;
 }
@@ -373,6 +410,14 @@ int sync_monitor_example ( int argc, const char *argv[] )
     // Initialized data
     monitor m = { 0 };
     
+    // Formatting
+    printf(
+        "╭─────────────────╮\n"\
+        "│ monitor example │\n"\
+        "╰─────────────────╯\n"\
+        "TODO\n\n"
+    );
+
     // Create
     if ( monitor_create(&m) == 0 ) return EXIT_FAILURE;
 
@@ -382,6 +427,9 @@ int sync_monitor_example ( int argc, const char *argv[] )
     // Destroy
     (void) monitor_destroy(&m);
 
+    // Format
+    putchar('\n');
+    
     // Success
     return 1;
 }
