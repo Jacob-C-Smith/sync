@@ -1,6 +1,7 @@
-# sync
-[![sync](https://github.com/Jacob-C-Smith/sync/actions/workflows/cmake.yml/badge.svg)](https://github.com/Jacob-C-Smith/sync/actions/workflows/cmake.yml)
+# sync 
 
+[![sync](https://github.com/Jacob-C-Smith/sync/actions/workflows/cmake.yml/badge.svg)](https://github.com/Jacob-C-Smith/sync/actions/workflows/cmake.yml)
+ 
  Cross platform synchronization primatives and high precision timestamps
 
  > 1 [Download](#download)
