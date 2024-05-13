@@ -9,9 +9,11 @@
 // Header file 
 #include <sync/sync.h>
 
+// Preprocessor macros
+#define SEC_2_NS 1000000000
+
 // Static data
 static signed SYNC_TIMER_DIVISOR = 0;
-static const signed SEC_2_NS = 1000000000;
 
 int mutex_create ( mutex *const p_mutex )
 {
@@ -100,8 +102,11 @@ int monitor_create ( monitor *const p_monitor )
 
     #else
 
+        int ret = ( pthread_cond_init(&p_monitor->_cond, NULL) == 0 );
+        ret &= ( pthread_mutex_init(&p_monitor->_mutex, NULL) == 0 );
+
         // Return
-        return ( pthread_cond_init(&p_monitor->_cond, NULL) == 0 ) && ( pthread_mutex_init(&p_monitor->_mutex, NULL) == 0 );
+        return  ret;
     #endif
 
     // Error handling
@@ -121,7 +126,7 @@ int monitor_create ( monitor *const p_monitor )
 }
 #endif
 
-int mutex_lock ( mutex _mutex )
+int mutex_lock ( mutex *const p_mutex )
 {
 
     // Platform dependent implementation
@@ -135,7 +140,7 @@ int mutex_lock ( mutex _mutex )
     #else
 
         // Return
-        return ( pthread_mutex_lock(&_mutex) == 0 );
+        return ( pthread_mutex_lock(p_mutex) == 0 );
     #endif
 
     // Error handling
@@ -194,7 +199,7 @@ int semaphore_wait ( semaphore _semaphore )
 #endif
 
 #ifdef BUILD_SYNC_WITH_MONITOR
-int monitor_wait ( monitor *p_monitor )
+int monitor_wait ( monitor *const p_monitor )
 {
 
     // Platform dependent implementation
@@ -207,13 +212,13 @@ int monitor_wait ( monitor *p_monitor )
         int ret = 0;
 
         // Lock
-        mutex_lock(p_monitor->_mutex);
+        mutex_lock(&p_monitor->_mutex);
 
         // Wait
-        if ( pthread_cond_wait(&p_monitor->_cond, &p_monitor->_mutex) == 0 );
+        if ( pthread_cond_wait(&p_monitor->_cond, &p_monitor->_mutex) == 0 ) ret = 1;
 
         // Unlock
-        mutex_unlock(p_monitor->_mutex);
+        mutex_unlock(&p_monitor->_mutex);
 
         // Return
         return ret;
@@ -221,7 +226,7 @@ int monitor_wait ( monitor *p_monitor )
 }
 #endif
 
-int mutex_unlock ( mutex _mutex )
+int mutex_unlock ( mutex *const p_mutex )
 {
 
     // Platform dependent implementation
@@ -233,7 +238,7 @@ int mutex_unlock ( mutex _mutex )
     #else
 
         // Return
-        return ( pthread_mutex_unlock(&_mutex) == 0 );
+        return ( pthread_mutex_unlock(p_mutex) == 0 );
     #endif
 
     // Error handling
@@ -295,7 +300,7 @@ int semaphore_signal ( semaphore _semaphore )
 #endif
 
 #ifdef BUILD_SYNC_WITH_MONITOR
-int monitor_notify ( monitor *p_monitor )
+int monitor_notify ( monitor *const p_monitor )
 {
 
     // Platform dependent implementation
@@ -308,20 +313,20 @@ int monitor_notify ( monitor *p_monitor )
         int ret = 0;
 
         // Lock
-        mutex_lock(p_monitor->_mutex);
+        //mutex_lock(p_monitor->_mutex);
 
         // Signal
         if ( pthread_cond_signal(&p_monitor->_cond) == 0 );
 
         // Unlock
-        mutex_unlock(p_monitor->_mutex);
+        //mutex_unlock(p_monitor->_mutex);
 
         // Return
         return ret;
     #endif
 }
 
-int monitor_notify_all ( monitor *p_monitor )
+int monitor_notify_all ( monitor *const p_monitor )
 {
 
     // Platform dependent implementation
@@ -334,13 +339,13 @@ int monitor_notify_all ( monitor *p_monitor )
         int ret = 0;
 
         // Lock
-        mutex_lock(p_monitor->_mutex);
+        //mutex_lock(p_monitor->_mutex);
 
         // Broadcast
         if ( pthread_cond_broadcast(&p_monitor->_cond) == 0 );
 
         // Unlock
-        mutex_unlock(p_monitor->_mutex);
+        //mutex_unlock(p_monitor->_mutex);
 
         // Return
         return ret;
@@ -454,7 +459,7 @@ int monitor_destroy ( monitor *const p_monitor )
 timestamp timer_high_precision ( void )
 {
     
-    // Initialiized data
+    // Initialized data
     timestamp ret = 0;
 
     // Platform dependent implementation
@@ -481,7 +486,7 @@ timestamp timer_high_precision ( void )
 signed timer_seconds_divisor ( void )
 {
 
-    // Success
+    // Done
     return SYNC_TIMER_DIVISOR;
 }
 
@@ -493,11 +498,11 @@ void timer_init ( void )
         QueryPerformanceFrequency((LARGE_INTEGER *)&SYNC_TIMER_DIVISOR);
     #else
 
-        // Set the sync timer divisor
+        // Update the timer divisor
         *(signed *)(&SYNC_TIMER_DIVISOR) = SEC_2_NS;
         
     #endif
 
-    // Return
+    // Done
     return;
 }

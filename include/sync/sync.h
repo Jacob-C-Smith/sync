@@ -1,5 +1,5 @@
 /** !
- * Include header for sync library
+ * Header for cross platform synchronization primitives 
  * 
  * @file sync/sync.h 
  * 
@@ -69,7 +69,7 @@ DLLEXPORT void timer_init ( void );
  * @sa timer_seconds_divisor
  * @sa timer_init
  * 
- * @return a high precision time stamp.
+ * @return a high precision time stamp
  */
 DLLEXPORT timestamp timer_high_precision ( void );
 
@@ -91,7 +91,7 @@ DLLEXPORT signed timer_seconds_divisor ( void );
 /** !
  * Create a mutex
  * 
- * @param p_mutex ret
+ * @param p_mutex result
  * 
  * @sa mutex_destroy
  * 
@@ -103,7 +103,7 @@ DLLEXPORT int mutex_create ( mutex *const p_mutex );
 /** !
  * Create a semaphore
  * 
- * @param p_semaphore ret
+ * @param p_semaphore result
  * @param count       the initial count
  * 
  * @sa semaphore_destroy
@@ -115,9 +115,9 @@ DLLEXPORT int semaphore_create ( semaphore *const p_semaphore, unsigned int coun
 
 #ifdef BUILD_SYNC_WITH_MONITOR
 /** !
- * Create a semaphore
+ * Create a monitor
  * 
- * @param p_monitor ret
+ * @param p_monitor result
  * 
  * @sa monitor_destroy
  * 
@@ -130,13 +130,13 @@ DLLEXPORT int monitor_create ( monitor *const p_monitor );
 /** !
  * Lock a mutex
  * 
- * @param _mutex the mutex
+ * @param p_mutex the mutex
  * 
  * @sa mutex_unlock
  * 
  * @return 1 on success, 0 on error
  */
-DLLEXPORT int mutex_lock ( mutex _mutex );
+DLLEXPORT int mutex_lock ( mutex *const p_mutex );
 
 #ifdef BUILD_SYNC_WITH_SEMAPHORE
 /** !
@@ -152,20 +152,30 @@ DLLEXPORT int semaphore_wait ( semaphore _semaphore );
 #endif
 
 #ifdef BUILD_SYNC_WITH_MONITOR
-DLLEXPORT int monitor_wait ( monitor *p_monitor );
+/** !
+ * Wait on a monitor
+ * 
+ * @param p_monitor the monitor
+ * 
+ * @sa monitor_notify
+ * @sa monitor_notify_all
+ * 
+ * @return 1 on success, 0 on error
+ */
+DLLEXPORT int monitor_wait ( monitor *const p_monitor );
 #endif
 
 // Unlock operations
 /** !
  * Unlock a mutex
  * 
- * @param _mutex the mutex
+ * @param p_mutex the mutex
  * 
  * @sa mutex_lock
  * 
  * @return 1 on success, 0 on error
  */
-DLLEXPORT int mutex_unlock ( mutex _mutex );
+DLLEXPORT int mutex_unlock ( mutex *p_mutex );
 
 #ifdef BUILD_SYNC_WITH_SEMAPHORE
 /** !
@@ -181,15 +191,36 @@ DLLEXPORT int semaphore_signal ( semaphore _semaphore );
 #endif
 
 #ifdef BUILD_SYNC_WITH_MONITOR
-DLLEXPORT int monitor_notify ( monitor *p_monitor );
-DLLEXPORT int monitor_notify_all ( monitor *p_monitor );
+/** !
+ * Signal one thread
+ * 
+ * @param p_monitor the monitor
+ * 
+ * @sa monitor_wait
+ * @sa monitor_notify_all
+ * 
+ * @return 1 on success, 0 on error
+ */
+DLLEXPORT int monitor_notify ( monitor *const p_monitor );
+
+/** !
+ * Signal all threads
+ * 
+ * @param p_monitor the monitor
+ * 
+ * @sa monitor_wait
+ * @sa monitor_notify
+ * 
+ * @return 1 on success, 0 on error
+ */
+DLLEXPORT int monitor_notify_all ( monitor *const p_monitor );
 #endif
 
 // Destructors
 /** !
- * Deallocate a mutex
+ * Free a mutex
  * 
- * @param p_mutex pointer to mutex
+ * @param p_mutex the mutex
  * 
  * @sa mutex_create
  * 
@@ -199,9 +230,9 @@ DLLEXPORT int mutex_destroy ( mutex *const p_mutex );
 
 #ifdef BUILD_SYNC_WITH_SEMAPHORE
 /** !
- * Deallocate a semaphore
+ * Free a semaphore
  * 
- * @param p_semaphore pointer to semaphore
+ * @param p_semaphore the semaphore
  * 
  * @sa semaphore_create
  * 
@@ -211,5 +242,14 @@ DLLEXPORT int semaphore_destroy ( semaphore *const p_semaphore );
 #endif
 
 #ifdef BUILD_SYNC_WITH_MONITOR
+/** !
+ * Free a monitor
+ * 
+ * @param p_monitor the monitor
+ * 
+ * @sa monitor_create
+ * 
+ * @return 1 on success, 0 on error
+ */
 DLLEXPORT int monitor_destroy ( monitor *const p_monitor );
 #endif

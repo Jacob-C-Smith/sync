@@ -349,13 +349,13 @@ int sync_mutex_example ( int argc, const char *argv[] )
     if ( mutex_create(&m) == 0 ) return EXIT_FAILURE;
 
     // Lock
-    (void) mutex_lock(m);
+    (void) mutex_lock(&m);
 
     // ... (Pretend) critical section ...
     printf("[sync] [mutex] This message was printed from a critical section\n");
 
     // Unlock
-    (void) mutex_unlock(m);
+    (void) mutex_unlock(&m);
 
     // Destroy
     (void) mutex_destroy(&m);
