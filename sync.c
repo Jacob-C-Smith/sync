@@ -25,7 +25,7 @@ void sync_init ( void )
     if ( initialized == true ) return;
 
     // Initialize the log library
-    log_init(0, true);
+    log_init();
 
     // Platform dependent implementation
     #ifdef _WIN64
@@ -516,4 +516,17 @@ signed timer_seconds_divisor ( void )
 
     // Done
     return SYNC_TIMER_DIVISOR;
+}
+
+void sync_exit ( void ) 
+{
+
+    // Clean up log
+    log_exit();
+
+    // TODO: Anything else?
+    // 
+
+    // Done
+    return;
 }

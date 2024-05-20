@@ -51,8 +51,9 @@
 // Typedefs
 typedef signed timestamp;
 
+// Initializer
 /** !
- * This gets called when linking the shared object
+ * This gets called at runtime before main. 
  * 
  * @param void
  * 
@@ -60,6 +61,7 @@ typedef signed timestamp;
  */
 void sync_init ( void ) __attribute__((constructor));
 
+// Timer
 /** !
  * Get a high precision time stamp. Compute differences,
  * and use the SYNC_TIMER_DIVISOR constant to convert 
@@ -254,3 +256,13 @@ DLLEXPORT int semaphore_destroy ( semaphore *const p_semaphore );
  */
 DLLEXPORT int monitor_destroy ( monitor *const p_monitor );
 #endif
+
+// Cleanup
+/** !
+ * This gets called at runtime after main
+ * 
+ * @param void
+ * 
+ * @return void
+ */
+void sync_exit ( void ) __attribute__((destructor));
