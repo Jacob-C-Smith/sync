@@ -147,7 +147,7 @@ int main ( int argc, const char *argv[] )
 
         // Error check
         if ( sync_monitor_example(argc, argv) == 0 ) goto failed_to_run_monitor_example;
-
+    
     // Success
     return EXIT_SUCCESS;
 

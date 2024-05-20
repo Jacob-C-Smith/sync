@@ -59,7 +59,7 @@ typedef signed timestamp;
  * 
  * @return void
  */
-void sync_init ( void ) __attribute__((constructor));
+DLLEXPORT void sync_init ( void ) __attribute__((constructor));
 
 // Timer
 /** !
@@ -265,4 +265,4 @@ DLLEXPORT int monitor_destroy ( monitor *const p_monitor );
  * 
  * @return void
  */
-void sync_exit ( void ) __attribute__((destructor));
+DLLEXPORT void sync_exit ( void ) __attribute__((destructor));

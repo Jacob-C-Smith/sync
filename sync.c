@@ -12,14 +12,12 @@
 // Preprocessor macros
 #define SEC_2_NS 1000000000
 
-// Static data
+// Data
 static signed SYNC_TIMER_DIVISOR = 0;
+static bool initialized = false;
 
 void sync_init ( void ) 
 {
-    
-    // Initialized data
-    static bool initialized = false;
 
     // State check
     if ( initialized == true ) return;
@@ -521,11 +519,17 @@ signed timer_seconds_divisor ( void )
 void sync_exit ( void ) 
 {
 
+    // State check
+    if ( initialized == false ) return;
+
     // Clean up log
     log_exit();
 
     // TODO: Anything else?
     // 
+
+    // Clear the initialized flag
+    initialized = false;
 
     // Done
     return;
