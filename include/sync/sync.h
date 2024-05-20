@@ -58,7 +58,7 @@ typedef signed timestamp;
  * 
  * @return void
  */
-void timer_init ( void ) __attribute__((constructor));
+void sync_init ( void ) __attribute__((constructor));
 
 /** !
  * Get a high precision time stamp. Compute differences,
@@ -68,7 +68,7 @@ void timer_init ( void ) __attribute__((constructor));
  * @param void
  * 
  * @sa timer_seconds_divisor
- * @sa timer_init
+ * @sa sync_init
  * 
  * @return a high precision time stamp
  */
@@ -82,7 +82,7 @@ DLLEXPORT timestamp timer_high_precision ( void );
  * @param void
  * 
  * @sa timer_high_precision
- * @sa timer_init
+ * @sa sync_init
  * 
  * @return a constant integer for converting time to seconds
  */

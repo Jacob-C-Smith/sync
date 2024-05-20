@@ -53,7 +53,7 @@
  ### Function definitions
  ```c 
  // Subsystem initialization
- void timer_init ( void );
+ void sync_init ( void );
  
  // Timestamps
  timestamp timer_high_precision  ( void );

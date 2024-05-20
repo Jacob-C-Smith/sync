@@ -15,9 +15,15 @@
 // Static data
 static signed SYNC_TIMER_DIVISOR = 0;
 
-void timer_init ( void ) 
+void sync_init ( void ) 
 {
     
+    // Initialized data
+    static bool initialized = false;
+
+    // State check
+    if ( initialized == true ) return;
+
     // Initialize the log library
     log_init(0, true);
 
@@ -29,6 +35,9 @@ void timer_init ( void )
         // Update the timer divisor
         *(signed *)(&SYNC_TIMER_DIVISOR) = SEC_2_NS;
     #endif
+
+    // Set the initialized flag
+    initialized = true;
 
     // Done
     return;
