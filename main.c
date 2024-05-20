@@ -12,6 +12,9 @@
 #include <string.h>
 #include <stdbool.h>
 
+// log module
+#include <log/log.h>
+
 // sync 
 #include <sync/sync.h>
 
@@ -104,7 +107,7 @@ int main ( int argc, const char *argv[] )
     parse_command_line_arguments(argc, argv, examples_to_run);
 
     // Formatting
-    printf(
+    log_info(
         "╭──────────────╮\n"\
         "│ sync example │\n"\
         "╰──────────────╯\n"\
@@ -153,7 +156,7 @@ int main ( int argc, const char *argv[] )
         failed_to_run_timer_example:
 
             // Write an error message to standard out
-            printf("Failed to run timer example!\n");
+            log_error("Error: Failed to run timer example!\n");
 
             // Error
             return EXIT_FAILURE;
@@ -161,7 +164,7 @@ int main ( int argc, const char *argv[] )
         failed_to_run_mutex_example:
 
             // Write an error message to standard out
-            printf("Failed to run mutex example!\n");
+            log_error("Error: Failed to run mutex example!\n");
 
             // Error
             return EXIT_FAILURE;
@@ -169,7 +172,7 @@ int main ( int argc, const char *argv[] )
         failed_to_run_semaphore_example:
 
             // Write an error message to standard out
-            printf("Failed to run semaphore example!\n");
+            log_error("Error: Failed to run semaphore example!\n");
 
             // Error
             return EXIT_FAILURE;
@@ -177,7 +180,7 @@ int main ( int argc, const char *argv[] )
         failed_to_run_monitor_example:
 
             // Write an error message to standard out
-            printf("Failed to run monitor example!\n");
+            log_error("Error: Failed to run monitor example!\n");
 
             // Error
             return EXIT_FAILURE;
@@ -285,7 +288,7 @@ int sync_timer_example ( int argc, const char *argv[] )
               td  = 0;
 
     // Formatting
-    printf(
+    log_info(
         "╭───────────────╮\n"\
         "│ timer example │\n"\
         "╰───────────────╯\n"\
@@ -293,9 +296,6 @@ int sync_timer_example ( int argc, const char *argv[] )
         "computes the 1,000,000,000th fibonacci number, and samples another timestamp t1.\n"\
         "The difference of the timestamps (t1 - t0) is printed to standard out.\n\n"
     );
-
-    // Initialize the timer
-    timer_init();
 
     // Record a timestamp
     t1 = timer_high_precision();
@@ -337,7 +337,7 @@ int sync_mutex_example ( int argc, const char *argv[] )
     mutex m = { 0 };
 
     // Formatting
-    printf(
+    log_info(
         "╭───────────────╮\n"\
         "│ mutex example │\n"\
         "╰───────────────╯\n"\
@@ -374,7 +374,7 @@ int sync_semaphore_example ( int argc, const char *argv[] )
     semaphore s = { 0 };
     
     // Formatting
-    printf(
+    log_info(
         "╭───────────────────╮\n"\
         "│ semaphore example │\n"\
         "╰───────────────────╯\n"\
@@ -411,7 +411,7 @@ int sync_monitor_example ( int argc, const char *argv[] )
     monitor m = { 0 };
     
     // Formatting
-    printf(
+    log_info(
         "╭─────────────────╮\n"\
         "│ monitor example │\n"\
         "╰─────────────────╯\n"\

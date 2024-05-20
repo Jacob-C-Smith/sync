@@ -15,6 +15,25 @@
 // Static data
 static signed SYNC_TIMER_DIVISOR = 0;
 
+void timer_init ( void ) 
+{
+    
+    // Initialize the log library
+    log_init(0, true);
+
+    // Platform dependent implementation
+    #ifdef _WIN64
+        QueryPerformanceFrequency((LARGE_INTEGER *)&SYNC_TIMER_DIVISOR);
+    #else
+
+        // Update the timer divisor
+        *(signed *)(&SYNC_TIMER_DIVISOR) = SEC_2_NS;
+    #endif
+
+    // Done
+    return;
+}
+
 int mutex_create ( mutex *const p_mutex )
 {
 
@@ -42,7 +61,7 @@ int mutex_create ( mutex *const p_mutex )
         {
             no_mutex:
                 #ifndef NDEBUG
-                    printf("[sync] Null pointer provided for \"p_mutex\" in call to function \"%s\"\n", __FUNCTION__);
+                    log_error("[sync] Null pointer provided for \"p_mutex\" in call to function \"%s\"\n", __FUNCTION__);
                 #endif
 
                 // Error
@@ -79,7 +98,7 @@ int semaphore_create ( semaphore *const p_semaphore, unsigned int count )
         {
             no_semaphore:
                 #ifndef NDEBUG
-                    printf("[sync] Null pointer provided for \"p_semaphore\" in call to function \"%s\"\n", __FUNCTION__);
+                    log_error("[sync] Null pointer provided for \"p_semaphore\" in call to function \"%s\"\n", __FUNCTION__);
                 #endif
 
                 // Error
@@ -116,7 +135,7 @@ int monitor_create ( monitor *const p_monitor )
         {
             no_monitor:
                 #ifndef NDEBUG
-                    printf("[sync] Null pointer provided for \"p_monitor\" in call to function \"%s\"\n", __FUNCTION__);
+                    log_error("[sync] Null pointer provided for \"p_monitor\" in call to function \"%s\"\n", __FUNCTION__);
                 #endif
 
                 // Error
@@ -151,7 +170,7 @@ int mutex_lock ( mutex *const p_mutex )
             #ifdef _WIN64
                 no_mutex:
                     #ifndef NDEBUG
-                        printf("[sync] Invalid parameter provided for \"_mutex\" in call to function \"%s\"\n", __FUNCTION__);
+                        log_error("[sync] Invalid parameter provided for \"_mutex\" in call to function \"%s\"\n", __FUNCTION__);
                     #endif
 
                     // Error
@@ -187,7 +206,7 @@ int semaphore_wait ( semaphore _semaphore )
             #ifdef _WIN64
                 no_semaphore:
                     #ifndef NDEBUG
-                        printf("[sync] Invalid parameter provided for \"_semaphore\" in call to function \"%s\"\n", __FUNCTION__);
+                        log_error("[sync] Invalid parameter provided for \"_semaphore\" in call to function \"%s\"\n", __FUNCTION__);
                     #endif
 
                     // Error
@@ -250,7 +269,7 @@ int mutex_unlock ( mutex *const p_mutex )
             #ifdef _WIN64
                 no_mutex:
                     #ifndef NDEBUG
-                        printf("[sync] Invalid parameter provided for \"_mutex\" in call to function \"%s\"\n", __FUNCTION__);
+                        log_error("[sync] Invalid parameter provided for \"_mutex\" in call to function \"%s\"\n", __FUNCTION__);
                     #endif
 
                     // Error
@@ -288,7 +307,7 @@ int semaphore_signal ( semaphore _semaphore )
             #ifdef _WIN64
                 no_semaphore:
                     #ifndef NDEBUG
-                        printf("[sync] Invalid parameter provided for \"_semaphore\" in call to function \"%s\"\n", __FUNCTION__);
+                        log_error("[sync] Invalid parameter provided for \"_semaphore\" in call to function \"%s\"\n", __FUNCTION__);
                     #endif
 
                     // Error
@@ -377,7 +396,7 @@ int mutex_destroy ( mutex *const p_mutex )
         {
             no_mutex:
                 #ifndef NDEBUG
-                    printf("[sync] Null pointer provided for \"p_mutex\" in call to function \"%s\"\n", __FUNCTION__);
+                    log_error("[sync] Null pointer provided for \"p_mutex\" in call to function \"%s\"\n", __FUNCTION__);
                 #endif
 
                 // Error
@@ -411,7 +430,7 @@ int semaphore_destroy ( semaphore *const p_semaphore )
         {
             no_semaphore:
                 #ifndef NDEBUG
-                    printf("[sync] Null pointer provided for \"p_semaphore\" in call to function \"%s\"\n", __FUNCTION__);
+                    log_error("[sync] Null pointer provided for \"p_semaphore\" in call to function \"%s\"\n", __FUNCTION__);
                 #endif
 
                 // Error
@@ -446,7 +465,7 @@ int monitor_destroy ( monitor *const p_monitor )
         {
             no_monitor:
                 #ifndef NDEBUG
-                    printf("[sync] Null pointer provided for \"p_monitor\" in call to function \"%s\"\n", __FUNCTION__);
+                    log_error("[sync] Null pointer provided for \"p_monitor\" in call to function \"%s\"\n", __FUNCTION__);
                 #endif
 
                 // Error
@@ -488,21 +507,4 @@ signed timer_seconds_divisor ( void )
 
     // Done
     return SYNC_TIMER_DIVISOR;
-}
-
-void timer_init ( void )
-{
-    
-    // Platform dependent implementation
-    #ifdef _WIN64
-        QueryPerformanceFrequency((LARGE_INTEGER *)&SYNC_TIMER_DIVISOR);
-    #else
-
-        // Update the timer divisor
-        *(signed *)(&SYNC_TIMER_DIVISOR) = SEC_2_NS;
-        
-    #endif
-
-    // Done
-    return;
 }

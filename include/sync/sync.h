@@ -13,6 +13,9 @@
 #include <stdio.h>
 #include <time.h>
 
+// log module
+#include <log/log.h>
+
 // Platform dependent includes
 #ifdef _WIN64
     #include <windows.h>
@@ -49,15 +52,13 @@
 typedef signed timestamp;
 
 /** !
- * Initialize the high precision timer
+ * This gets called when linking the shared object
  * 
  * @param void
  * 
- * @sa timer_high_precision
- * 
  * @return void
  */
-DLLEXPORT void timer_init ( void );
+void timer_init ( void ) __attribute__((constructor));
 
 /** !
  * Get a high precision time stamp. Compute differences,

@@ -37,6 +37,19 @@ if (${IS_DEBUG_BUILD})
     add_compile_definitions(NDEBUG)
 endif()
 
+# Find the log module
+if ( NOT "${HAS_LOG}")
+
+    # Add the log directory
+    add_subdirectory(${CMAKE_SOURCE_DIR}/extern/log ${CMAKE_SOURCE_DIR}/build/log)
+
+    # Let any parent project know that this project has log
+    if(NOT PROJECT_IS_TOP_LEVEL)
+        set(HAS_LOG true PARENT_SCOPE)
+        set(LOG_INCLUDE_DIR ${LOG_INCLUDE_DIR} PARENT_SCOPE)
+    endif()
+endif()
+
 # Add the sync project
 if ( NOT "${HAS_SYNC}")
 
@@ -54,11 +67,12 @@ endif()
 
 # Add source to the executable
 add_executable(sync_example "main.c")
-add_dependencies(sync_example sync)
-target_include_directories(sync_example PUBLIC ${SYNC_INCLUDE_DIR})
-target_link_libraries(sync_example sync pthread rt)
+add_dependencies(sync_example sync log)
+target_include_directories(sync_example PUBLIC ${SYNC_INCLUDE_DIR} ${LOG_INCLUDE_DIR})
+target_link_libraries(sync_example sync log pthread rt)
 
 # Add source to the library
 add_library(sync SHARED "sync.c")
-target_include_directories(sync PUBLIC ${SYNC_INCLUDE_DIR})
-target_link_libraries(sync pthread rt)
+add_dependencies(sync log)
+target_include_directories(sync PUBLIC ${SYNC_INCLUDE_DIR} ${LOG_INCLUDE_DIR})
+target_link_libraries(sync log pthread rt)
