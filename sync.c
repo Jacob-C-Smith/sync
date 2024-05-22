@@ -41,7 +41,7 @@ void sync_init ( void )
     return;
 }
 
-int mutex_create ( mutex *const p_mutex )
+int mutex_create ( mutex *p_mutex )
 {
 
     // Argument check
@@ -78,7 +78,7 @@ int mutex_create ( mutex *const p_mutex )
 }
 
 #ifdef BUILD_SYNC_WITH_SEMAPHORE
-int semaphore_create ( semaphore *const p_semaphore, unsigned int count )
+int semaphore_create ( semaphore *p_semaphore, unsigned int count )
 {
 
     // Argument check
@@ -116,7 +116,7 @@ int semaphore_create ( semaphore *const p_semaphore, unsigned int count )
 #endif
 
 #ifdef BUILD_SYNC_WITH_MONITOR
-int monitor_create ( monitor *const p_monitor )
+int monitor_create ( monitor *p_monitor )
 {
     // Argument check
     if ( p_monitor == (void *) 0 ) goto no_monitor;
@@ -152,7 +152,7 @@ int monitor_create ( monitor *const p_monitor )
 }
 #endif
 
-int mutex_lock ( mutex *const p_mutex )
+int mutex_lock ( mutex *p_mutex )
 {
 
     // Platform dependent implementation
@@ -225,7 +225,7 @@ int semaphore_wait ( semaphore _semaphore )
 #endif
 
 #ifdef BUILD_SYNC_WITH_MONITOR
-int monitor_wait ( monitor *const p_monitor )
+int monitor_wait ( monitor *p_monitor )
 {
 
     // Platform dependent implementation
@@ -252,7 +252,7 @@ int monitor_wait ( monitor *const p_monitor )
 }
 #endif
 
-int mutex_unlock ( mutex *const p_mutex )
+int mutex_unlock ( mutex *p_mutex )
 {
 
     // Platform dependent implementation
@@ -326,7 +326,7 @@ int semaphore_signal ( semaphore _semaphore )
 #endif
 
 #ifdef BUILD_SYNC_WITH_MONITOR
-int monitor_notify ( monitor *const p_monitor )
+int monitor_notify ( monitor *p_monitor )
 {
 
     // Platform dependent implementation
@@ -355,7 +355,7 @@ int monitor_notify_all ( monitor *const p_monitor )
 }
 #endif
 
-int mutex_destroy ( mutex *const p_mutex )
+int mutex_destroy ( mutex *p_mutex )
 {
 
     // Argument check
@@ -389,7 +389,7 @@ int mutex_destroy ( mutex *const p_mutex )
 }
 
 #ifdef BUILD_SYNC_WITH_SEMAPHORE
-int semaphore_destroy ( semaphore *const p_semaphore )
+int semaphore_destroy ( semaphore *p_semaphore )
 {
 
     // Argument check
@@ -424,7 +424,7 @@ int semaphore_destroy ( semaphore *const p_semaphore )
 #endif
 
 #ifdef BUILD_SYNC_WITH_MONITOR
-int monitor_destroy ( monitor *const p_monitor )
+int monitor_destroy ( monitor *p_monitor )
 {
     
     // Argument check
