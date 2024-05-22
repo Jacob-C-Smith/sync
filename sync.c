@@ -335,20 +335,8 @@ int monitor_notify ( monitor *const p_monitor )
         // TODO
     #else
 
-        // Initialized data
-        int ret = 0;
-
-        // Lock
-        //mutex_lock(p_monitor->_mutex);
-
-        // Signal
-        if ( pthread_cond_signal(&p_monitor->_cond) == 0 );
-
-        // Unlock
-        //mutex_unlock(p_monitor->_mutex);
-
         // Return
-        return ret;
+        return pthread_cond_signal(&p_monitor->_cond);
     #endif
 }
 
@@ -361,20 +349,8 @@ int monitor_notify_all ( monitor *const p_monitor )
         // TODO
     #else
 
-        // Initialized data
-        int ret = 0;
-
-        // Lock
-        //mutex_lock(p_monitor->_mutex);
-
-        // Broadcast
-        if ( pthread_cond_broadcast(&p_monitor->_cond) == 0 );
-
-        // Unlock
-        //mutex_unlock(p_monitor->_mutex);
-
         // Return
-        return ret;
+        return pthread_cond_broadcast(&p_monitor->_cond);
     #endif
 }
 #endif

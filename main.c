@@ -211,7 +211,7 @@ void parse_command_line_arguments ( int argc, const char *argv[], bool *examples
     if ( argc > SYNC_EXAMPLE_QUANTITY + 1 ) goto invalid_arguments;
 
     // Iterate through each command line argument
-    for (size_t i = 1; i < argc; i++)
+    for (int i = 1; i < argc; i++)
     {
         
         // Timer example?
@@ -279,6 +279,10 @@ void parse_command_line_arguments ( int argc, const char *argv[], bool *examples
 int sync_timer_example ( int argc, const char *argv[] )
 {
 
+    // Suppress warnings
+    (void) argc;
+    (void) argv;
+
     // Initialized data
     size_t    c   = 0,
               d   = 1;
@@ -333,6 +337,10 @@ int sync_timer_example ( int argc, const char *argv[] )
 int sync_mutex_example ( int argc, const char *argv[] )
 {
 
+    // Suppress warnings
+    (void) argc;
+    (void) argv;
+
     // Initialized data
     mutex m = { 0 };
 
@@ -370,6 +378,10 @@ int sync_mutex_example ( int argc, const char *argv[] )
 int sync_semaphore_example ( int argc, const char *argv[] )
 {
 
+    // Suppress warnings
+    (void) argc;
+    (void) argv;
+
     // Initialized data
     semaphore s = { 0 };
     
@@ -406,6 +418,10 @@ int sync_semaphore_example ( int argc, const char *argv[] )
 
 int sync_monitor_example ( int argc, const char *argv[] )
 {
+
+    // Suppress warnings
+    (void) argc;
+    (void) argv;
 
     // Initialized data
     monitor m = { 0 };
