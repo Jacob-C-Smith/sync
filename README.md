@@ -4,6 +4,8 @@
  
  Cross platform synchronization primatives and high precision timestamps
 
+ > 0 [Try it](#try-it)
+ >
  > 1 [Download](#download)
  >
  > 2 [Build](#build)
@@ -17,6 +19,11 @@
  >> 4.1 [Type definitions](#type-definitions)
  >>
  >> 4.2 [Function definitions](#function-definitions)
+
+## Try it
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/Jacob-C-Smith/sync?quickstart=1)
+
+Wait for a few moments, then click the play button on the bottom of the window. This will run the example program.
 
  ## Download
  To download sync, execute the following command
