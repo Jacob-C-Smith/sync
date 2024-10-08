@@ -1,5 +1,5 @@
-﻿# Need CMake 3.16
-cmake_minimum_required (VERSION 3.16.0)
+﻿# Need CMake 3.28.0
+cmake_minimum_required (VERSION 3.28.0)
 
 # The name of the repository
 project ("sync")
@@ -69,10 +69,21 @@ endif()
 add_executable(sync_example "main.c")
 add_dependencies(sync_example sync log)
 target_include_directories(sync_example PUBLIC ${SYNC_INCLUDE_DIR} ${LOG_INCLUDE_DIR})
-target_link_libraries(sync_example sync log pthread rt)
+target_link_libraries(sync_example sync log pthread)
+
+# Mac already includes rt, so its not needed on Mac
+if(NOT ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+	target_link_libraries(sync_example rt)
+endif()
 
 # Add source to the library
 add_library(sync SHARED "sync.c")
 add_dependencies(sync log)
 target_include_directories(sync PUBLIC ${SYNC_INCLUDE_DIR} ${LOG_INCLUDE_DIR})
-target_link_libraries(sync log pthread rt)
+target_link_libraries(sync log pthread)
+
+# Mac already includes rt, so its not needed on Mac
+if(NOT ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+	target_link_libraries(sync rt)
+endif()
+
