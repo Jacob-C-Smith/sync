@@ -1,5 +1,5 @@
-﻿# Need CMake 3.28.0
-cmake_minimum_required (VERSION 3.28.0)
+﻿# Need CMake 3.16.0
+cmake_minimum_required (VERSION 3.16.0)
 
 # The name of the repository
 project ("sync")
@@ -15,7 +15,7 @@ if(MSVC)
 else()
 
     # For clang
-    #set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -lrt -std=gnu99 -Wall -Wextra -Wpedantic -Weverything -Wno-declaration-after-statement -Ofast")
+    #set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -lrt -std=gnu99 -Wall -Wextra  -Weverything -Wno-declaration-after-statement -Ofast")
 
     # For GCC
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu99 -Wall -Wextra -O3 -pthread -lpthread")
@@ -26,6 +26,11 @@ endif()
 # Comment out for Debug mode
 set(IS_DEBUG_BUILD CMAKE_BUILD_TYPE STREQUAL "Debug")
 
+# Build sync with timer
+add_compile_definitions(BUILD_SYNC_WITH_TIMER)
+
+# Build sync with mutex
+add_compile_definitions(BUILD_SYNC_WITH_MUTEX)
 # Build sync with semaphore
 add_compile_definitions(BUILD_SYNC_WITH_SEMAPHORE)
 
