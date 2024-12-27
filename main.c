@@ -1,5 +1,5 @@
 /** !
- * Example sync program
+ * sync example program
  * 
  * @file main.c
  * 
@@ -24,11 +24,15 @@
 // Enumeration definitions
 enum sync_examples_e
 {
-    SYNC_TIMER_EXAMPLE     = 0,
-    SYNC_MUTEX_EXAMPLE     = 1,
-    SYNC_SEMAPHORE_EXAMPLE = 2,
-    SYNC_MONITOR_EXAMPLE   = 3,
-    SYNC_EXAMPLE_QUANTITY  = 4
+    SYNC_TIMER_EXAMPLE              = 0,
+    SYNC_MUTEX_EXAMPLE              = 1,
+    SYNC_SPINLOCK_EXAMPLE           = 2,
+    SYNC_RW_LOCK_EXAMPLE            = 3,
+    SYNC_SEMAPHORE_EXAMPLE          = 4,
+    SYNC_CONDITION_VARIABLE_EXAMPLE = 5,
+    SYNC_MONITOR_EXAMPLE            = 6,
+    SYNC_BARRIER_EXAMPLE            = 7,
+    SYNC_EXAMPLE_QUANTITY           = 8
 };
 
 // Forward declarations
@@ -73,6 +77,26 @@ int sync_timer_example ( int argc, const char *argv[] );
 int sync_mutex_example ( int argc, const char *argv[] );
 
 /** !
+ * Spinlock example program
+ * 
+ * @param argc the argc parameter of the entry point
+ * @param argv the argv parameter of the entry point
+ * 
+ * @return 1 on success, 0 on error
+ */
+int sync_spinlock_example ( int argc, const char *argv[] );
+
+/** !
+ * Read Write Lock example program
+ * 
+ * @param argc the argc parameter of the entry point
+ * @param argv the argv parameter of the entry point
+ * 
+ * @return 1 on success, 0 on error
+ */
+int sync_read_write_lock_example ( int argc, const char *argv[] );
+
+/** !
  * Semaphone example program
  * 
  * @param argc the argc parameter of the entry point
@@ -83,6 +107,16 @@ int sync_mutex_example ( int argc, const char *argv[] );
 int sync_semaphore_example ( int argc, const char *argv[] );
 
 /** !
+ * Condition variable example program
+ * 
+ * @param argc the argc parameter of the entry point
+ * @param argv the argv parameter of the entry point
+ * 
+ * @return 1 on success, 0 on error
+ */
+int sync_condition_variable_example ( int argc, const char *argv[] );
+
+/** !
  * Monitor example program
  * 
  * @param argc the argc parameter of the entry point
@@ -91,6 +125,16 @@ int sync_semaphore_example ( int argc, const char *argv[] );
  * @return 1 on success, 0 on error
  */
 int sync_monitor_example ( int argc, const char *argv[] );
+
+/** !
+ * Barrier example program
+ * 
+ * @param argc the argc parameter of the entry point
+ * @param argv the argv parameter of the entry point
+ * 
+ * @return 1 on success, 0 on error
+ */
+int sync_barrier_example ( int argc, const char *argv[] );
 
 // Entry point
 int main ( int argc, const char *argv[] )
@@ -112,9 +156,10 @@ int main ( int argc, const char *argv[] )
         "│ sync example │\n"\
         "╰──────────────╯\n"\
         "The sync library provides cross platform synchronization primitives and high-precision timing\n"\
-        "Sync provides %d abstractions. The timer, the mutex, the semaphore, and the monitor.\n\n"\
+        "Sync provides %d abstractions. The timer, the mutex, the spinlock, the semaphore, and the monitor.\n\n"\
         "A timer is used to collect high percision timestsamps.\n"\
         "A mutex is the most basic synchronization primitive. It provides mutual exclusion to code.\n"\
+        "A spinlock is a type of mutex. It provides mutual exclusion to code.\n"\
         "A semaphore is an abstraction for controlling access to a resource.\n"\
         "A monitor is an abstraction for blocking and signaling threads in a critical section.\n\n",
         SYNC_EXAMPLE_QUANTITY
@@ -136,17 +181,41 @@ int main ( int argc, const char *argv[] )
         // Error check
         if ( sync_mutex_example(argc, argv) == 0 ) goto failed_to_run_mutex_example;
     
+    // Run the spinlock example program
+    if ( examples_to_run[SYNC_SPINLOCK_EXAMPLE] )
+
+        // Error check
+        if ( sync_spinlock_example(argc, argv) == 0 ) goto failed_to_run_spinlock_example;
+
+    // Run the read write lock example program
+    if ( examples_to_run[SYNC_RW_LOCK_EXAMPLE] )
+
+        // Error check
+        if ( sync_read_write_lock_example(argc, argv) == 0 ) goto failed_to_run_read_write_lock_example;
+    
     // Run the semaphore example program
     if ( examples_to_run[SYNC_SEMAPHORE_EXAMPLE] )
 
         // Error check
         if ( sync_semaphore_example(argc, argv) == 0 ) goto failed_to_run_semaphore_example;
     
+    // Run the condition variable example program
+    if ( examples_to_run[SYNC_CONDITION_VARIABLE_EXAMPLE] )
+
+        // Error check
+        if ( sync_condition_variable_example(argc, argv) == 0 ) goto failed_to_run_condition_variable_example;
+    
     // Run the monitor example program
     if ( examples_to_run[SYNC_MONITOR_EXAMPLE] )
 
         // Error check
         if ( sync_monitor_example(argc, argv) == 0 ) goto failed_to_run_monitor_example;
+    
+    // Run the barrier example program
+    if ( examples_to_run[SYNC_BARRIER_EXAMPLE] )
+
+        // Error check
+        if ( sync_barrier_example(argc, argv) == 0 ) goto failed_to_run_barrier_example;
     
     // Success
     return EXIT_SUCCESS;
@@ -168,7 +237,23 @@ int main ( int argc, const char *argv[] )
 
             // Error
             return EXIT_FAILURE;
+            
+        failed_to_run_spinlock_example:
 
+            // Write an error message to standard out
+            log_error("Error: Failed to run spinlock example!\n");
+
+            // Error
+            return EXIT_FAILURE;
+        
+        failed_to_run_read_write_lock_example:
+        
+            // Write an error message to standard out
+            log_error("Error: Failed to run read write lock example!\n");
+
+            // Error
+            return EXIT_FAILURE;
+            
         failed_to_run_semaphore_example:
 
             // Write an error message to standard out
@@ -177,6 +262,14 @@ int main ( int argc, const char *argv[] )
             // Error
             return EXIT_FAILURE;
         
+        failed_to_run_condition_variable_example:
+        
+            // Write an error message to standard out
+            log_error("Error: Failed to run condition variable example!\n");
+
+            // Error
+            return EXIT_FAILURE;
+
         failed_to_run_monitor_example:
 
             // Write an error message to standard out
@@ -184,9 +277,16 @@ int main ( int argc, const char *argv[] )
 
             // Error
             return EXIT_FAILURE;
+
+        failed_to_run_barrier_example:
+
+            // Write an error message to standard out
+            log_error("Error: Failed to run barrier example!\n");
+
+            // Error
+            return EXIT_FAILURE;
     }
 }
-
 
 void print_usage ( const char *argv0 )
 {
@@ -195,7 +295,7 @@ void print_usage ( const char *argv0 )
     if ( argv0 == (void *) 0 ) exit(EXIT_FAILURE);
 
     // Print a usage message to standard out
-    printf("Usage: %s [timer] [mutex] [semaphore] [monitor]\n", argv0);
+    printf("Usage: %s [timer] [mutex] [spinlock] [read-write] [semaphore] [condition-variable] [monitor] [barrier]\n", argv0);
 
     // Done
     return;
@@ -217,25 +317,37 @@ void parse_command_line_arguments ( int argc, const char *argv[], bool *examples
         // Timer example?
         if ( strcmp(argv[i], "timer") == 0 )
 
-            // Set the thread example flag
+            // Set the timer example flag
             examples_to_run[SYNC_TIMER_EXAMPLE] = true;
 
         // Mutex example?
         else if ( strcmp(argv[i], "mutex") == 0 )
             
-            // Set the thread pool example flag
+            // Set the mutex example flag
             examples_to_run[SYNC_MUTEX_EXAMPLE] = true;
+
+        // Spinlock example?
+        else if ( strcmp(argv[i], "spinlock") == 0 )
+            
+            // Set the spinlock example flag
+            examples_to_run[SYNC_SPINLOCK_EXAMPLE] = true;
+
+        // Read Write Lock example?
+        else if ( strcmp(argv[i], "read-write") == 0 )
+            
+            // Set the read write lock example flag
+            examples_to_run[SYNC_RW_LOCK_EXAMPLE] = true;
 
         // Semaphore example?
         else if ( strcmp(argv[i], "semaphore") == 0 )
 
-            // Set the schedule example flag
+            // Set the semaphore flag
             examples_to_run[SYNC_SEMAPHORE_EXAMPLE] = true;
         
         // Monitor example?
         else if ( strcmp(argv[i], "monitor") == 0 )
 
-            // Set the schedule example flag
+            // Set the monitor flag
             examples_to_run[SYNC_MONITOR_EXAMPLE] = true;
 
         // Default
@@ -274,7 +386,6 @@ void parse_command_line_arguments ( int argc, const char *argv[], bool *examples
         }
     }
 }
-
 
 int sync_timer_example ( int argc, const char *argv[] )
 {
@@ -357,16 +468,109 @@ int sync_mutex_example ( int argc, const char *argv[] )
     if ( mutex_create(&m) == 0 ) return EXIT_FAILURE;
 
     // Lock
+    printf("[WAIT] Locking mutex ... \r");
     (void) mutex_lock(&m);
+    log_info("[DONE]\n");
 
     // ... (Pretend) critical section ...
-    printf("[sync] [mutex] This message was printed from a critical section\n");
+    printf("This message was printed from a critical section\n");
 
     // Unlock
+    printf("[WAIT] Unlocking mutex ... \r");
     (void) mutex_unlock(&m);
+    log_info("[DONE]\n");
 
     // Destroy
     (void) mutex_destroy(&m);
+
+    // Format
+    putchar('\n');
+
+    // Success
+    return 1;
+}
+
+int sync_spinlock_example ( int argc, const char *argv[] )
+{
+
+    // Suppress warnings
+    (void) argc;
+    (void) argv;
+
+    // Initialized data
+    spinlock sl = { 0 };
+
+    // Formatting
+    log_info(
+        "╭──────────────────╮\n"\
+        "│ spinlock example │\n"\
+        "╰──────────────────╯\n"\
+        "In this example, a spinlock is created and locked. The program does a pretend\n"\
+        "critical section, then the spinlock is unlocked. Finally, the spinlock is destroyed\n\n"
+    );
+
+    // Create
+    if ( spinlock_create(&sl) == 0 ) return EXIT_FAILURE;
+
+    // Lock
+    printf("[WAIT] Locking spinlock ... \r");
+    spinlock_lock(&sl);
+    log_info("[DONE]\n");
+
+    // ... (Pretend) critical section ...
+    printf("This message was printed from a critical section\n");
+
+    // Unlock
+    printf("[WAIT] Unlocking spinlock ... \r");
+    (void) spinlock_unlock(&sl);
+    log_info("[DONE]\n");
+
+    // Destroy
+    (void) spinlock_destroy(&sl);
+
+    // Format
+    putchar('\n');
+
+    // Success
+    return 1;
+}
+
+int sync_read_write_lock_example ( int argc, const char *argv[] )
+{
+
+    // Suppress warnings
+    (void) argc;
+    (void) argv;
+
+    // Initialized data
+    rwlock rw = { 0 };
+
+    // Formatting
+    log_info(
+        "╭─────────────────────────╮\n"\
+        "│ read write lock example │\n"\
+        "╰─────────────────────────╯\n"\
+        "In this example, a read write lock is created. [TODO] Finally, the read write lock is destroyed\n\n"
+    );
+
+    // Create
+    if ( rwlock_create(&rw) ) return EXIT_FAILURE;
+
+    // Lock
+    printf("[WAIT] Locking read write lock ... \r");
+    rwlock_lock_wr(&rw);
+    log_info("[DONE]\n");
+
+    // ... (Pretend) critical section ...
+    printf("This message was printed from a critical section\n");
+
+    // Unlock
+    printf("[WAIT] Unlocking read write lock ... \r");
+    rwlock_unlock(&rw);
+    log_info("[DONE]\n");
+
+    // Destroy
+    (void) rwlock_destroy(&rw);
 
     // Format
     putchar('\n');
@@ -401,7 +605,7 @@ int sync_semaphore_example ( int argc, const char *argv[] )
     (void) semaphore_wait(s);
 
     // ... (Pretend) critical section ...
-    printf("[sync] [semaphore] This message was printed from a critical section\n");
+    printf("This message was printed from a critical section\n");
 
     // Signal
     (void) semaphore_signal(s);
@@ -411,6 +615,37 @@ int sync_semaphore_example ( int argc, const char *argv[] )
 
     // Format
     putchar('\n');
+
+    // Success
+    return 1;
+}
+
+int sync_condition_variable_example ( int argc, const char *argv[] )
+{
+
+    // Suppress warnings
+    (void) argc;
+    (void) argv;
+
+    // Initialized data
+    condition_variable c = { 0 };
+    
+    // Formatting
+    log_info(
+        "╭────────────────────────────╮\n"\
+        "│ condition variable example │\n"\
+        "╰────────────────────────────╯\n"\
+        "TODO\n\n"
+    );
+
+    // Create
+    if ( condition_variable_create(&c) == 0 ) return EXIT_FAILURE;
+
+    // TODO
+    // 
+
+    // Destroy
+    (void) condition_variable_destroy(&c);
 
     // Success
     return 1;
@@ -437,11 +672,41 @@ int sync_monitor_example ( int argc, const char *argv[] )
     // Create
     if ( monitor_create(&m) == 0 ) return EXIT_FAILURE;
 
-    // ... (Pretend) critical section ...
-    printf("[sync] [monitor] TODO\n");
+    // TODO
+    //
 
     // Destroy
     (void) monitor_destroy(&m);
+
+    // Success
+    return 1;
+}
+
+int sync_barrier_example ( int argc, const char *argv[] )
+{
+
+    // Suppress warnings
+    (void) argc;
+    (void) argv;
+
+    // Initialized data
+    barrier b = { 0 };
+    
+    // Formatting
+    log_info(
+        "╭─────────────────╮\n"\
+        "│ barrier example │\n"\
+        "╰─────────────────╯\n"\
+        "TODO\n\n"
+    );
+
+    // Create
+    if ( barrier_create(&b, 0) == 0 ) return EXIT_FAILURE;
+
+    // TODO: 
+
+    // Destroy
+    (void) barrier_destroy(&b);
 
     // Format
     putchar('\n');
