@@ -52,35 +52,74 @@ Wait for a few moments, then click the play button on the bottom of the window. 
  ## Definitions
  ### Type definitions
  ```c
- typedef ...    mutex;
- typedef ...    semaphore;
- typedef size_t timestamp;
+ typedef ... mutex;
+ typedef ... rwlock;
+ typedef ... spinlock;
+ typedef ... semaphore;
+
+ typedef ... condition_variable;
+ typedef ... monitor;
+ typedef ... barrier;
+
+ typedef signed timestamp;
  ```
  *NOTE: mutex and semaphore definitions are platform dependent*
  ### Function definitions
  ```c 
- // Subsystem initialization
- void sync_init ( void );
- 
- // Timestamps
- timestamp timer_high_precision  ( void );
- size_t    timer_seconds_divisor ( void );
- 
- // Constructors
- int mutex_create      ( mutex     *p_mutex );
- int semaphore_create  ( semaphore *p_semaphore, int count );
- 
- // Lock operations
- int mutex_lock        ( mutex     _mutex );
- int semaphore_wait    ( semaphore _semaphore );
- 
- // Unlock operations
- int mutex_unlock      ( mutex     _mutex );
- int semaphore_signal  ( semaphore _semaphore );
-  
- // Destructors
- int mutex_destroy     ( mutex     *p_mutex );
- int semaphore_destroy ( semaphore *p_semaphore );
- ```
+ // Initializer
+void sync_init ( void ) __attribute__((constructor));
 
-Written by Jacob Smith, 2023
+// Timer
+timestamp timer_high_precision  ( void );
+signed    timer_seconds_divisor ( void );
+
+// Mutex
+int mutex_create  ( mutex *p_mutex );
+int mutex_lock    ( mutex *p_mutex );
+int mutex_unlock  ( mutex *p_mutex );
+int mutex_destroy ( mutex *p_mutex );
+
+// Spinlock
+int spinlock_create  ( spinlock *p_spinlock );
+int spinlock_lock    ( spinlock *p_spinlock );
+int spinlock_unlock  ( spinlock *p_spinlock );
+int spinlock_destroy ( spinlock *p_spinlock );
+
+// Read Write Lock
+int rwlock_create          ( rwlock *p_rwlock );
+int rwlock_lock_rd         ( rwlock *p_rwlock );
+int rwlock_lock_wr         ( rwlock *p_rwlock );
+int rwlock_lock_timeout_rd ( rwlock *p_rwlock, timestamp _time );
+int rwlock_lock_timeout_wr ( rwlock *p_rwlock, timestamp _time );
+int rwlock_unlock          ( rwlock *p_rwlock );
+int rwlock_destroy         ( rwlock *p_rwlock );
+
+// Semaphore
+int semaphore_create  ( semaphore *p_semaphore, unsigned int count );
+int semaphore_wait    ( semaphore _semaphore );
+int semaphore_signal  ( semaphore _semaphore );
+int semaphore_destroy ( semaphore *p_semaphore );
+
+// Condition variable
+int condition_variable_create       ( condition_variable *p_condition_variable );
+int condition_variable_wait         ( condition_variable *p_condition_variable, mutex *p_mutex );
+int condition_variable_wait_timeout ( condition_variable *p_condition_variable, mutex *p_mutex, timestamp _time );
+int condition_variable_signal       ( condition_variable *const p_condition_variable );
+int condition_variable_broadcast    ( condition_variable *const p_condition_variable );
+int condition_variable_destroy      ( condition_variable *p_condition_variable );
+
+// Monitor
+int monitor_create     ( monitor *p_monitor );
+int monitor_wait       ( monitor *p_monitor );
+int monitor_notify     ( monitor *p_monitor );
+int monitor_notify_all ( monitor *p_monitor );
+int monitor_destroy    ( monitor *p_monitor );
+
+// Barrier
+int barrier_create  ( barrier *p_barrier, int count );
+int barrier_wait    ( barrier *p_barrier );
+int barrier_destroy ( barrier *p_barrier );
+
+// Cleanup
+void sync_exit ( void ) __attribute__((destructor));
+ ```
