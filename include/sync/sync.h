@@ -39,13 +39,18 @@
     typedef HANDLE semaphore;
     typedef HANDLE thread;
 #else
-    typedef pthread_mutex_t mutex;
-    typedef sem_t           semaphore;
+    typedef pthread_mutex_t    mutex;
+    typedef pthread_spinlock_t spinlock;
+    typedef pthread_rwlock_t   rwlock;
+    typedef sem_t              semaphore;
+    typedef pthread_cond_t     condition_variable;
+    typedef pthread_barrier_t  barrier;
     typedef struct
     {
         pthread_mutex_t _mutex;
         pthread_cond_t  _cond;
     } monitor;
+
 #endif
 
 // Typedefs
@@ -62,6 +67,7 @@ typedef signed timestamp;
 DLLEXPORT void sync_init ( void ) __attribute__((constructor));
 
 // Timer
+#ifdef BUILD_SYNC_WITH_TIMER
 /** !
  * Get a high precision time stamp. Compute differences,
  * and use the SYNC_TIMER_DIVISOR constant to convert 
@@ -89,8 +95,10 @@ DLLEXPORT timestamp timer_high_precision ( void );
  * @return a constant integer for converting time to seconds
  */
 DLLEXPORT signed timer_seconds_divisor ( void );
+#endif
 
-// Constructors
+// Mutex
+#ifdef BUILD_SYNC_WITH_MUTEX
 /** !
  * Create a mutex
  * 
@@ -102,6 +110,181 @@ DLLEXPORT signed timer_seconds_divisor ( void );
 */
 DLLEXPORT int mutex_create ( mutex *p_mutex );
 
+/** !
+ * Lock a mutex
+ * 
+ * @param p_mutex the mutex
+ * 
+ * @sa mutex_unlock
+ * 
+ * @return 1 on success, 0 on error
+ */
+DLLEXPORT int mutex_lock ( mutex *p_mutex );
+
+/** !
+ * Unlock a mutex
+ * 
+ * @param p_mutex the mutex
+ * 
+ * @sa mutex_lock
+ * 
+ * @return 1 on success, 0 on error
+ */
+DLLEXPORT int mutex_unlock ( mutex *p_mutex );
+
+/** !
+ * Free a mutex
+ * 
+ * @param p_mutex the mutex
+ * 
+ * @sa mutex_create
+ * 
+ * @return 1 on success, 0 on error
+ */
+DLLEXPORT int mutex_destroy ( mutex *p_mutex );
+#endif
+
+// Spinlock
+#ifdef BUILD_SYNC_WITH_SPINLOCK
+/** !
+ * Create a spinlock
+ * 
+ * @param p_spinlock result
+ * 
+ * @sa spinlock_destroy
+ * 
+ * @return 1 on success, 0 on error
+*/
+DLLEXPORT int spinlock_create ( spinlock *p_spinlock );
+
+/** !
+ * Lock a spinlock
+ * 
+ * @param p_spinlock the spinlock
+ * 
+ * @sa spinlock_unlock
+ * 
+ * @return 1 on success, 0 on error
+ */
+DLLEXPORT int spinlock_lock ( spinlock *p_spinlock );
+
+/** !
+ * Unlock a spinlock
+ * 
+ * @param p_spinlock the spinlock
+ * 
+ * @sa spinlock_lock
+ * 
+ * @return 1 on success, 0 on error
+ */
+DLLEXPORT int spinlock_unlock ( spinlock *p_spinlock );
+
+/** !
+ * Free a spinlock
+ * 
+ * @param p_spinlock the spinlock
+ * 
+ * @sa spinlock_create
+ * 
+ * @return 1 on success, 0 on error
+ */
+DLLEXPORT int spinlock_destroy ( spinlock *p_spinlock );
+#endif
+
+// Read Write Lock
+#ifdef BUILD_SYNC_WITH_RW_LOCK
+/** !
+ * Create a read-write lock
+ * 
+ * @param p_rwlock result
+ * 
+ * @sa rwlock_destroy
+ * 
+ * @return 1 on success, 0 on error
+ */
+DLLEXPORT int rwlock_create ( rwlock *p_rwlock );
+
+/** !
+ * Lock a reader
+ * 
+ * @param p_rwlock the read-write lock
+ * 
+ * @sa rwlock_lock_wr
+ * @sa rwlock_lock_timeout_rd
+ * @sa rwlock_lock_timeout_wr
+ * @sa rwlock_unlock
+ * 
+ * @return 1 on success, 0 on error
+ */
+DLLEXPORT int rwlock_lock_rd ( rwlock *p_rwlock );
+
+/** !
+ * Lock a writer
+ * 
+ * @param p_rwlock the read-write lock
+ * 
+ * @sa rwlock_lock_rd
+ * @sa rwlock_lock_timeout_rd
+ * @sa rwlock_lock_timeout_wr
+ * @sa rwlock_unlock
+ * 
+ * @return 1 on success, 0 on error
+ */
+DLLEXPORT int rwlock_lock_wr ( rwlock *p_rwlock );
+
+/** !
+ * Lock a reader
+ * 
+ * @param p_rwlock the read-write lock
+ * @param _time    the quantity of time to wait, in nanoseconds 
+ * 
+ * @sa rwlock_lock_wr
+ * @sa rwlock_lock_timeout_wr
+ * @sa rwlock_unlock
+ * 
+ * @return 1 on success, 0 on error
+ */
+DLLEXPORT int rwlock_lock_timeout_rd ( rwlock *p_rwlock, timestamp _time );
+
+/** !
+ * Lock a writer
+ * 
+ * @param p_rwlock the read-write lock
+ * @param _time    the quantity of time to wait, in nanoseconds 
+ * 
+ * @sa rwlock_lock_rd
+ * @sa rwlock_lock_timeout_rd
+ * @sa rwlock_unlock
+ * 
+ * @return 1 on success, 0 on error
+ */
+DLLEXPORT int rwlock_lock_timeout_wr ( rwlock *p_rwlock, timestamp _time );
+
+/** !
+ * Unlock a read-write lock
+ * 
+ * @param p_rwlock the read-write lock
+ * 
+ * @sa rwlock_lock_rd
+ * @sa rwlock_lock_wr
+ * 
+ * @return 1 on success, 0 on error
+ */
+DLLEXPORT int rwlock_unlock ( rwlock *p_rwlock );
+
+/** !
+ * Destroy a read-write lock
+ * 
+ * @param p_rwlock the read-write lock
+ * 
+ * @sa rwlock_create
+ * 
+ * @return 1 on success, 0 on error
+ */
+DLLEXPORT int rwlock_destroy ( rwlock *p_rwlock );
+#endif
+
+// Semaphore
 #ifdef BUILD_SYNC_WITH_SEMAPHORE
 /** !
  * Create a semaphore
@@ -114,8 +297,114 @@ DLLEXPORT int mutex_create ( mutex *p_mutex );
  * @return 1 on success, 0 on error
  */
 DLLEXPORT int semaphore_create ( semaphore *p_semaphore, unsigned int count );
+
+/** !
+ * Wait on a semaphore
+ * 
+ * @param _semaphore the semaphore
+ * 
+ * @sa semaphore_signal
+ * 
+ * @return 1 on success, 0 on error
+ */
+DLLEXPORT int semaphore_wait ( semaphore _semaphore );
+
+/** !
+ * Signal a semaphore
+ * 
+ * @param _semaphore the semaphore
+ * 
+ * @sa semaphore_wait
+ * 
+ * @return 1 on success, 0 on error
+ */
+DLLEXPORT int semaphore_signal ( semaphore _semaphore );
+
+/** !
+ * Free a semaphore
+ * 
+ * @param p_semaphore the semaphore
+ * 
+ * @sa semaphore_create
+ * 
+ * @return 1 on success, 0 on error
+ */
+DLLEXPORT int semaphore_destroy ( semaphore *p_semaphore );
 #endif
 
+// Condition variable
+#ifdef BUILD_SYNC_WITH_CONDITION_VARIABLE
+/** !
+ * Create a condition variable
+ * 
+ * @param p_condition_variable result
+ * 
+ * @sa condition_variable_destroy
+ * 
+ * @return 1 on success, 0 on error
+ */
+DLLEXPORT int condition_variable_create ( condition_variable *p_condition_variable );
+
+/** !
+ * Wait on a condition variable
+ * 
+ * @param p_condition_variable the condition variable
+ * @param p_mutex              the mutex
+ * 
+ * @sa condition_variable_wait_timeout
+ * 
+ * @return 1 on success, 0 on error
+ */
+DLLEXPORT int condition_variable_wait ( condition_variable *p_condition_variable, mutex *p_mutex );
+
+/** !
+ * Wait on a condition variable with some timeout
+ * 
+ * @param p_condition_variable the condition variable
+ * @param p_mutex              the mutex
+ * @param _time                the quantity of time to wait, in nanoseconds
+ * 
+ * @sa condition_variable_wait
+ * 
+ * @return 1 on success, 0 on error
+ */
+DLLEXPORT int condition_variable_wait_timeout ( condition_variable *p_condition_variable, mutex *p_mutex, timestamp _time );
+
+/** !
+ * Signal once thread
+ * 
+ * @param p_condition_variable the condition variable
+ * 
+ * @sa condition_variable_broadcast
+ * 
+ * @return 1 on success, 0 on error
+ */
+DLLEXPORT int condition_variable_signal ( condition_variable *const p_condition_variable );
+
+/** !
+ * Signal all threads
+ * 
+ * @param p_condition_variable the condition variable
+ * 
+ * @sa condition_variable_signal
+ * 
+ * @return 1 on success, 0 on error
+ */
+DLLEXPORT int condition_variable_broadcast ( condition_variable *const p_condition_variable );
+
+/** !
+ * Destroy a condition variable
+ * 
+ * @param p_condition_variable the condition variable
+ * 
+ * @sa condition_variable_create
+ * 
+ * @return 1 on success, 0 on error
+ */
+DLLEXPORT int condition_variable_destroy ( condition_variable *p_condition_variable );
+#endif
+
+// Monitor
 #ifdef BUILD_SYNC_WITH_MONITOR
 /** !
  * Create a monitor
@@ -127,34 +416,7 @@ DLLEXPORT int semaphore_create ( semaphore *p_semaphore, unsigned int count );
  * @return 1 on success, 0 on error
  */
 DLLEXPORT int monitor_create ( monitor *p_monitor );
-#endif
 
-// Lock operations
-/** !
- * Lock a mutex
- * 
- * @param p_mutex the mutex
- * 
- * @sa mutex_unlock
- * 
- * @return 1 on success, 0 on error
- */
-DLLEXPORT int mutex_lock ( mutex *p_mutex );
-
-#ifdef BUILD_SYNC_WITH_SEMAPHORE
-/** !
- * Wait on a semaphore
- * 
- * @param _semaphore the semaphore
- * 
- * @sa semaphore_signal
- * 
- * @return 1 on success, 0 on error
- */
-DLLEXPORT int semaphore_wait ( semaphore _semaphore );
-#endif
-
-#ifdef BUILD_SYNC_WITH_MONITOR
 /** !
  * Wait on a monitor
  * 
@@ -166,34 +428,7 @@ DLLEXPORT int semaphore_wait ( semaphore _semaphore );
  * @return 1 on success, 0 on error
  */
 DLLEXPORT int monitor_wait ( monitor *p_monitor );
-#endif
 
-// Unlock operations
-/** !
- * Unlock a mutex
- * 
- * @param p_mutex the mutex
- * 
- * @sa mutex_lock
- * 
- * @return 1 on success, 0 on error
- */
-DLLEXPORT int mutex_unlock ( mutex *p_mutex );
-
-#ifdef BUILD_SYNC_WITH_SEMAPHORE
-/** !
- * Signal a semaphore
- * 
- * @param _semaphore the semaphore
- * 
- * @sa semaphore_wait
- * 
- * @return 1 on success, 0 on error
- */
-DLLEXPORT int semaphore_signal ( semaphore _semaphore );
-#endif
-
-#ifdef BUILD_SYNC_WITH_MONITOR
 /** !
  * Signal one thread
  * 
@@ -217,34 +452,7 @@ DLLEXPORT int monitor_notify ( monitor *p_monitor );
  * @return 1 on success, 0 on error
  */
 DLLEXPORT int monitor_notify_all ( monitor *p_monitor );
-#endif
 
-// Destructors
-/** !
- * Free a mutex
- * 
- * @param p_mutex the mutex
- * 
- * @sa mutex_create
- * 
- * @return 1 on success, 0 on error
- */
-DLLEXPORT int mutex_destroy ( mutex *p_mutex );
-
-#ifdef BUILD_SYNC_WITH_SEMAPHORE
-/** !
- * Free a semaphore
- * 
- * @param p_semaphore the semaphore
- * 
- * @sa semaphore_create
- * 
- * @return 1 on success, 0 on error
- */
-DLLEXPORT int semaphore_destroy ( semaphore *p_semaphore );
-#endif
-
-#ifdef BUILD_SYNC_WITH_MONITOR
 /** !
  * Free a monitor
  * 
@@ -255,6 +463,41 @@ DLLEXPORT int semaphore_destroy ( semaphore *p_semaphore );
  * @return 1 on success, 0 on error
  */
 DLLEXPORT int monitor_destroy ( monitor *p_monitor );
+#endif
+
+// Barrier
+#ifdef BUILD_SYNC_WITH_BARRIER
+/** !
+ * Create a barrier
+ * 
+ * @param p_barrier result
+ * @param count     the quantity of threads that must wait at the barrier
+ * 
+ * @sa barrier_destroy
+ * 
+ * @return 1 on success, 0 on error
+ */
+DLLEXPORT int barrier_create ( barrier *p_barrier, int count );
+
+/** !
+ * Wait at a barrier
+ * 
+ * @param p_barrier the barrier
+ * 
+ * @return 1 on success, 0 on error
+ */
+DLLEXPORT int barrier_wait ( barrier *p_barrier );
+
+/** !
+ * Destroy a barrier
+ * 
+ * @param p_barrier the barrier
+ * 
+ * @sa barrier_create
+ * 
+ * @return 1 on success, 0 on error
+ */
+DLLEXPORT int barrier_destroy ( barrier *p_barrier );
 #endif
 
 // Cleanup

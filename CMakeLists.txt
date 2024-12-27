@@ -31,11 +31,24 @@ add_compile_definitions(BUILD_SYNC_WITH_TIMER)
 
 # Build sync with mutex
 add_compile_definitions(BUILD_SYNC_WITH_MUTEX)
+
+# Build sync with spinlock
+add_compile_definitions(BUILD_SYNC_WITH_SPINLOCK)
+
+# Build sync with rwlock
+add_compile_definitions(BUILD_SYNC_WITH_RW_LOCK)
+
 # Build sync with semaphore
 add_compile_definitions(BUILD_SYNC_WITH_SEMAPHORE)
 
+# Build sync with condition variable
+add_compile_definitions(BUILD_SYNC_WITH_CONDITION_VARIABLE)
+
 # Build sync with monitor
 add_compile_definitions(BUILD_SYNC_WITH_MONITOR)
+
+# Build sync with barrier
+add_compile_definitions(BUILD_SYNC_WITH_BARRIER)
 
 # Set debug mode
 if (${IS_DEBUG_BUILD})
