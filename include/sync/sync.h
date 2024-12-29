@@ -67,7 +67,7 @@ typedef signed timestamp;
 DLLEXPORT void sync_init ( void ) __attribute__((constructor));
 
 // Timer
-#ifdef BUILD_SYNC_WITH_TIMER
+#ifndef SYNC_BUILD_NO_TIMER
 /** !
  * Get a high precision time stamp. Compute differences,
  * and use the SYNC_TIMER_DIVISOR constant to convert 
@@ -98,7 +98,7 @@ DLLEXPORT signed timer_seconds_divisor ( void );
 #endif
 
 // Mutex
-#ifdef BUILD_SYNC_WITH_MUTEX
+#ifndef SYNC_BUILD_NO_MUTEX
 /** !
  * Create a mutex
  * 
@@ -145,7 +145,7 @@ DLLEXPORT int mutex_destroy ( mutex *p_mutex );
 #endif
 
 // Spinlock
-#ifdef BUILD_SYNC_WITH_SPINLOCK
+#ifndef SYNC_BUILD_NO_SPINLOCK
 /** !
  * Create a spinlock
  * 
@@ -192,7 +192,7 @@ DLLEXPORT int spinlock_destroy ( spinlock *p_spinlock );
 #endif
 
 // Read Write Lock
-#ifdef BUILD_SYNC_WITH_RW_LOCK
+#ifndef SYNC_BUILD_NO_RW_LOCK
 /** !
  * Create a read-write lock
  * 
@@ -285,7 +285,7 @@ DLLEXPORT int rwlock_destroy ( rwlock *p_rwlock );
 #endif
 
 // Semaphore
-#ifdef BUILD_SYNC_WITH_SEMAPHORE
+#ifndef SYNC_BUILD_NO_SEMAPHORE
 /** !
  * Create a semaphore
  * 
@@ -333,7 +333,7 @@ DLLEXPORT int semaphore_destroy ( semaphore *p_semaphore );
 #endif
 
 // Condition variable
-#ifdef BUILD_SYNC_WITH_CONDITION_VARIABLE
+#ifndef SYNC_BUILD_NO_CONDITION_VARIABLE
 /** !
  * Create a condition variable
  * 
@@ -405,7 +405,7 @@ DLLEXPORT int condition_variable_destroy ( condition_variable *p_condition_varia
 #endif
 
 // Monitor
-#ifdef BUILD_SYNC_WITH_MONITOR
+#ifndef SYNC_BUILD_NO_MONITOR
 /** !
  * Create a monitor
  * 
@@ -466,7 +466,7 @@ DLLEXPORT int monitor_destroy ( monitor *p_monitor );
 #endif
 
 // Barrier
-#ifdef BUILD_SYNC_WITH_BARRIER
+#ifndef SYNC_BUILD_NO_BARRIER
 /** !
  * Create a barrier
  * 

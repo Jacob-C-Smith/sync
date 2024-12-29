@@ -701,12 +701,13 @@ int sync_barrier_example ( int argc, const char *argv[] )
     );
 
     // Create
-    if ( barrier_create(&b, 0) == 0 ) return EXIT_FAILURE;
+    //if ( barrier_create(&b, 0) == 0 ) return EXIT_FAILURE;
 
-    // TODO: 
+    // TODO
+    //
 
     // Destroy
-    (void) barrier_destroy(&b);
+    //(void) barrier_destroy(&b);
 
     // Format
     putchar('\n');
