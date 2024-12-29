@@ -1,5 +1,5 @@
 #
-# Log Makefile
+# Sync Makefile
 #
 # @file Makefile
 #
