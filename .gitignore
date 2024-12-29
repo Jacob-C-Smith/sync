@@ -60,6 +60,5 @@ dkms.conf
 .vscode/
 .vs/
 build/
-Makefile
 Icon?
 

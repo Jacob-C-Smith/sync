@@ -41,7 +41,7 @@ void sync_init ( void )
     return;
 }
 
-#ifdef BUILD_SYNC_WITH_MUTEX
+#ifndef SYNC_BUILD_NO_MUTEX
 int mutex_create ( mutex *p_mutex )
 {
 
@@ -181,7 +181,7 @@ int mutex_destroy ( mutex *p_mutex )
 }
 #endif
 
-#ifdef BUILD_SYNC_WITH_SPINLOCK
+#ifndef SYNC_BUILD_NO_SPINLOCK
 int spinlock_create ( spinlock *p_spinlock )
 {
 
@@ -302,7 +302,7 @@ int spinlock_destroy ( spinlock *p_spinlock )
 }
 #endif
 
-#ifdef BUILD_SYNC_WITH_RW_LOCK
+#ifndef SYNC_BUILD_NO_RW_LOCK
 int rwlock_create ( rwlock *p_rwlock )
 {
     // Argument check
@@ -526,7 +526,7 @@ int rwlock_destroy ( rwlock *p_rwlock )
 }
 #endif
 
-#ifdef BUILD_SYNC_WITH_SEMAPHORE
+#ifndef SYNC_BUILD_NO_SEMAPHORE
 int semaphore_create ( semaphore *p_semaphore, unsigned int count )
 {
 
@@ -669,7 +669,7 @@ int semaphore_destroy ( semaphore *p_semaphore )
 }
 #endif
 
-#ifdef BUILD_SYNC_WITH_CONDITION_VARIABLE
+#ifndef SYNC_BUILD_NO_CONDITION_VARIABLE
 int condition_variable_create ( condition_variable *p_condition_variable )
 {
 
@@ -844,7 +844,7 @@ int condition_variable_destroy ( condition_variable *p_condition_variable )
 }
 #endif
 
-#ifdef BUILD_SYNC_WITH_MONITOR
+#ifndef SYNC_BUILD_NO_MONITOR
 int monitor_create ( monitor *p_monitor )
 {
     // Argument check
@@ -968,7 +968,7 @@ int monitor_destroy ( monitor *p_monitor )
 }
 #endif
 
-#ifdef BUILD_SYNC_WITH_BARRIER
+#ifndef SYNC_BUILD_NO_BARRIER
 int barrier_create ( barrier *p_barrier, int count )
 {
 
@@ -1063,7 +1063,7 @@ int barrier_destroy ( barrier *p_barrier )
 }
 #endif
 
-#ifdef BUILD_SYNC_WITH_TIMER
+#ifndef SYNC_BUILD_NO_TIMER
 timestamp timer_high_precision ( void )
 {
     
