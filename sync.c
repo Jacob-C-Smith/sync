@@ -969,12 +969,12 @@ int monitor_destroy ( monitor *p_monitor )
 #endif
 
 #ifdef BUILD_SYNC_WITH_BARRIER
-int barrier_create ( barrier *p_barrier, int count )
+int barrier_create ( barrier *p_barrier, unsigned int count )
 {
 
     // Argument check
     if ( p_barrier == (void *) 0 ) goto no_barrier;
-    if ( count     == (void *) 0 ) goto no_count;
+    if ( count     ==          0 ) goto no_count;
 
     // Construct
     pthread_barrier_init(p_barrier, NULL, count);

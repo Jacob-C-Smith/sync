@@ -477,7 +477,7 @@ DLLEXPORT int monitor_destroy ( monitor *p_monitor );
  * 
  * @return 1 on success, 0 on error
  */
-DLLEXPORT int barrier_create ( barrier *p_barrier, int count );
+DLLEXPORT int barrier_create ( barrier *p_barrier, unsigned int count );
 
 /** !
  * Wait at a barrier
