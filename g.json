@@ -1,0 +1,10 @@
+{
+    "name"        : "sync",
+    "group"       : "Primitives",
+    "description" : "Cross platform synchronization primitives and high-precision timing",
+    "repository"  : "https://github.com/Jacob-C-Smith/sync",
+    "icon"        : "https://icons.g10.app/sync.png",
+    "tested"      : "dc",
+    "thread safe" : true,
+    "demo"        : "https://codespaces.new/Jacob-C-Smith/sync?quickstart=1"
+}
