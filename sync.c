@@ -91,6 +91,11 @@ int mutex_lock ( mutex *p_mutex )
         return ( WaitForSingleObject(_mutex, INFINITE) == WAIT_FAILED ? 0 : 1 );
     #else
 
+        // Log
+        #ifdef SYNC_DEBUG
+            log_info("[sync] [mutex] Locking mutex @ 0x%x\n", (size_t)p_mutex & 0xffff);
+        #endif
+        
         // Return
         return ( pthread_mutex_lock(p_mutex) == 0 );
     #endif
@@ -124,6 +129,11 @@ int mutex_unlock ( mutex *p_mutex )
         return ReleaseMutex(_mutex);
     #else
 
+        // Log
+        #ifdef SYNC_DEBUG
+            log_info("[sync] [mutex] Unlocking mutex @ 0x%x\n", (size_t)p_mutex & 0xffff);
+        #endif
+        
         // Return
         return ( pthread_mutex_unlock(p_mutex) == 0 );
     #endif

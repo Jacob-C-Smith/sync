@@ -50,6 +50,9 @@ add_compile_definitions(BUILD_SYNC_WITH_MONITOR)
 # Build sync with barrier
 add_compile_definitions(BUILD_SYNC_WITH_BARRIER)
 
+# Build sync with debug
+#add_compile_definitions(SYNC_DEBUG)
+
 # Set debug mode
 if (${IS_DEBUG_BUILD})
     add_compile_definitions(NDEBUG)
